@@ -13,6 +13,7 @@ public:
 	virtual void Draw(DrawData2D* _DD);
 
 protected:
+	bool  m_alive;
 	float m_life;
 	float m_originalLife;
 	float m_speed;

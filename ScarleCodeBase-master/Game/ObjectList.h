@@ -28,5 +28,5 @@
 #include "Player2D.h"
 #include "Enemy.h"
 #include "Particle.h"
+#include "ParticleEmitter2D.h"
 #include "Tile2D.h"
-#include "Camera2D.h"

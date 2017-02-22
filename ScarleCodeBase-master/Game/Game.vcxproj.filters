@@ -49,6 +49,27 @@
     <Filter Include="Jet Set Willy Platformer\Platformer Objects\2D\Source">
       <UniqueIdentifier>{01e73c6e-7bcd-454a-8185-915670785862}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{3b5d8a41-606e-4ebb-917f-88404e9e9557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\3D">
+      <UniqueIdentifier>{2974bc71-82a6-4fc0-9c1f-20e64aa23e3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\2D">
+      <UniqueIdentifier>{92b42a19-decf-477d-8fac-f4b1b5763f92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\2D\Headers">
+      <UniqueIdentifier>{22c7266a-1ca3-4ed1-a6e5-f3b39521b589}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\2D\Source">
+      <UniqueIdentifier>{d27ff878-679e-48b6-9f8a-8a9580de8988}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\3D\Headers">
+      <UniqueIdentifier>{b208564d-68c5-420f-8526-8b740124b59a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Particles\3D\Source">
+      <UniqueIdentifier>{2bc00a16-4d58-4f2b-a5fe-31cfc7e1bfc5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -144,17 +165,17 @@
     <ClInclude Include="Enemy.h">
       <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Particle.h">
-      <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera2D.h">
-      <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Headers</Filter>
-    </ClInclude>
     <ClInclude Include="Tile2D.h">
       <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Actor2D.h">
       <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Particles\2D\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter2D.h">
+      <Filter>Particles\2D\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,17 +239,17 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Particle.cpp">
-      <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Source</Filter>
-    </ClCompile>
     <ClCompile Include="Actor2D.cpp">
-      <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera2D.cpp">
       <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Source</Filter>
     </ClCompile>
     <ClCompile Include="Tile2D.cpp">
       <Filter>Jet Set Willy Platformer\Platformer Objects\2D\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Particles\2D\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter2D.cpp">
+      <Filter>Particles\2D\Source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
