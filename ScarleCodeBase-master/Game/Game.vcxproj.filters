@@ -177,6 +177,12 @@
     <ClInclude Include="ParticleEmitter2D.h">
       <Filter>Particles\2D\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Particle3D.h">
+      <Filter>Particles\3D\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Emitter3D.h">
+      <Filter>Particles\3D\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -250,6 +256,12 @@
     </ClCompile>
     <ClCompile Include="ParticleEmitter2D.cpp">
       <Filter>Particles\2D\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Emitter3D.cpp">
+      <Filter>Particles\3D\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle3D.cpp">
+      <Filter>Particles\3D\Source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

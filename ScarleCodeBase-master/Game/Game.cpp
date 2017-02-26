@@ -202,7 +202,8 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	//m_GameObject2Ds.push_back(enemyTest5);
 
 	srand(time(0));
-	vector<Particle*> particles;
+
+	/*vector<Particle*> particles;
 	for (int i = 0; i < 100; i++)
 	{
 		float randLife = rand() % 2 + 1;
@@ -214,7 +215,16 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 		particles.push_back(new Particle("PlayerTest", _pd3dDevice,
 			400.0f, 400.0f, randLife, randAngle, randSpeed, Vector2(randScale, randScale)));
 		m_GameObject2Ds.push_back(particles[i]);
-	}
+	}*/
+	
+	ParticleEmitter2D* emitter = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 200.0f, 200.0f, 0.5f, 0.6f, 0.0f, 360.0f, 750.0f, 1000.0f, 0.08f, 0.1f, 50);
+	m_GameObject2Ds.push_back(emitter);
+
+	ParticleEmitter2D* emitter2 = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 200.0f, 200.0f, 0.5f, 1.0f, 0.0f, 360.0f, 70.0f, 300.0f, 0.08f, 0.1f, 50);
+	m_GameObject2Ds.push_back(emitter2);
+
+	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 600.0f, 400.0f, 1.0f, 3.0f, 0.0f, 90.0f, 75.0f, 100.0f, 0.08f, 0.1f, 75);
+	m_GameObject2Ds.push_back(fireEmitter);
 };
 
 

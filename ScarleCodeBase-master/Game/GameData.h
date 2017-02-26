@@ -8,7 +8,7 @@
 #include <dinput.h>
 #include "GameState.h"
 
-using namespace DirectX;
+//using namespace DirectX;
 
 struct GameData
 {

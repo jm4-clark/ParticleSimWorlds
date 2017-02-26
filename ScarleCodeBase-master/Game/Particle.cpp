@@ -4,19 +4,13 @@
 #include "helper.h"
 #include <DirectXColors.h>
 
-Particle::Particle(string _fileName, ID3D11Device * _GD, float x, float y, float life, float angle, float speed, Vector2 size)
+Particle::Particle(string _fileName, ID3D11Device * _GD)
 {
 	m_alive = false;
-	m_pos.x = x;
-	m_pos.y = y;
-
-	m_originalLife = m_life = life;
-
-	angleInRadians = angle * XM_PI / 180;
-
-	m_originalScale = m_scale = size;
-
-	m_vel = Vector2((speed * cos(angleInRadians)), (-speed * sin(angleInRadians)));
+	m_life = 0.0f;
+	angleInRadians = 0.0f;
+	m_scale = Vector2(0.0f, 0.0f);
+	m_vel = Vector2(0.0f, 0.0f);
 
 	sprite = new ImageGO2D(_fileName, _GD);
 
@@ -24,9 +18,28 @@ Particle::Particle(string _fileName, ID3D11Device * _GD, float x, float y, float
 
 }
 
+
+void Particle::Spawn(float x, float y, float life, float angle, float speed, Vector2 size)
+{
+	m_alive = true; //turn particle on
+	m_pos.x = x; //set pos
+	m_pos.y = y;
+	m_originalLife = m_life = life; //set life
+	angleInRadians = angle * XM_PI / 180;
+	m_vel = Vector2((speed * cos(angleInRadians)), (-speed * sin(angleInRadians)));
+	m_originalScale = m_scale = size;
+}
+
+
+
 Particle::~Particle()
 {
 	delete sprite;
+}
+
+bool Particle::isAlive()
+{
+	return m_alive;
 }
 
 void Particle::Tick(GameData * _GD)
