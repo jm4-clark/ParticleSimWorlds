@@ -29,4 +29,6 @@ protected:
 	float angleB;
 	float minScale;
 	float maxScale;
+
+	bool onOff;
 };

@@ -24,6 +24,8 @@ ParticleEmitter2D::ParticleEmitter2D(ID3D11Device* _pd3dDevice, string _fileName
 	maxScale = _maxSize;
 	angleA = _angleA;
 	angleB = _angleB;
+
+	onOff = false;
 }
 
 
@@ -39,7 +41,7 @@ void ParticleEmitter2D::Tick(GameData* _GD)
 	float randSpeed = minSpeed + (rand()) / (RAND_MAX / (maxSpeed - minSpeed));
 	float randSize = minScale + (rand()) / (RAND_MAX / (maxScale - minScale));
 	
-	if ((_GD->m_keyboardState[DIK_Z] & 0x80) && !(_GD->m_prevKeyboardState[DIK_Z] & 0x80))
+	if (((_GD->m_keyboardState[DIK_Z] & 0x80) && !(_GD->m_prevKeyboardState[DIK_Z] & 0x80)) && onOff == false)
 	{
 		for (list<Particle *>::iterator it = m_particles.begin(); it != m_particles.end(); it++)
 		{
@@ -51,7 +53,24 @@ void ParticleEmitter2D::Tick(GameData* _GD)
 		}
 	}
 
-	if (_GD->m_keyboardState[DIK_X] & 0x80)
+	if ((_GD->m_keyboardState[DIK_X] & 0x80) && onOff == false)
+	{
+		for (list<Particle *>::iterator it = m_particles.begin(); it != m_particles.end(); it++)
+		{
+			if (!(*it)->isAlive())
+			{
+				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize));
+				break;
+			}
+		}
+	}
+
+	if ((_GD->m_keyboardState[DIK_C] & 0x80) && !(_GD->m_prevKeyboardState[DIK_C] & 0x80))
+	{
+		onOff = !onOff;
+	}
+
+	if (onOff == true)
 	{
 		for (list<Particle *>::iterator it = m_particles.begin(); it != m_particles.end(); it++)
 		{
