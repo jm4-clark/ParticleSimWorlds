@@ -60,5 +60,8 @@
     <ImageContentTask Include="PlayerTest.png">
       <Filter>Textures</Filter>
     </ImageContentTask>
+    <ImageContentTask Include="whitecircle.png">
+      <Filter>Textures</Filter>
+    </ImageContentTask>
   </ItemGroup>
 </Project>

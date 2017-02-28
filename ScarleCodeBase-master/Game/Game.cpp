@@ -124,14 +124,17 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 		m_GameObject2Ds.push_back(particles[i]);
 	}*/
 	
-	ParticleEmitter2D* emitter = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 200.0f, 200.0f, 0.5f, 0.1f, 180.0f, 180.0f, 900.0f, 100.0f, 0.09f, 0.01f, 50);
+	ParticleEmitter2D* emitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 200.0f, 200.0f, 0.5f, 0.1f, 180.0f, 180.0f, 700.0f, 100.0f, 0.09f, 0.01f, 50);
 	m_GameObject2Ds.push_back(emitter);
 
 	ParticleEmitter2D* emitter2 = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 200.0f, 200.0f, 0.75f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, 50);
 	m_GameObject2Ds.push_back(emitter2);
 
-	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 600.0f, 400.0f, 2.0f, 1.0f, 45.0f, 45.0f, 80.0f, 20.0f, 0.09f, 0.01f, 75);
+	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 600.0f, 400.0f, 2.0f, 1.0f, 45.0f, 90.0f, 80.0f, 20.0f, 0.09f, 0.01f, 75);
 	m_GameObject2Ds.push_back(fireEmitter);
+
+	ParticleEmitter2D* emitter3 = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 400.0f, 300.0f, 3.0f, 1.5f, 270.0f, 10.0f, 80.0f, 20.0f, 0.09f, 0.01f, 75);
+	m_GameObject2Ds.push_back(emitter3);
 };
 
 
