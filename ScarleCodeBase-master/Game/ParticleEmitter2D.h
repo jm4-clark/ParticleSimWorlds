@@ -9,7 +9,8 @@ class ParticleEmitter2D : public GameObject2D
 {
 public:
 	ParticleEmitter2D(ID3D11Device* _pd3dDevice, string _fileName, 
-		float _x, float _y, float _minLife, float _maxLife, float _angleA, float _angleB, float _minSpeed, float _maxSpeed, float _minSize, float _maxSize, int _particleNum);
+		float _x, float _y, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar, float _size, float _sizeVar, int _particleNum);
+		//float _x, float _y, float _minLife, float _maxLife, float _angleA, float _angleB, float _minSpeed, float _maxSpeed, float _minSize, float _maxSize, int _particleNum);
 	~ParticleEmitter2D();
 	list<Particle*> getParticles();
 
@@ -21,14 +22,22 @@ protected:
 
 	float x;
 	float y;
+	float life;
+	float speed;
+	float angle;
+	float scale;
 	float minLife;
 	float maxLife;
 	float minSpeed;
 	float maxSpeed;
-	float angleA;
-	float angleB;
+	float minAngle;
+	float maxAngle;
 	float minScale;
 	float maxScale;
 
+	/*float speedVar;
+	float angleVar;
+	float scaleVar;
+	float lifeVar;*/
 	bool onOff;
 };
