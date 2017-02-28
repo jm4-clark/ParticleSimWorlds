@@ -116,7 +116,7 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	ParticleEmitter2D* emitter2 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 0.75f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, Color(255, 255, 0), 50);
 	m_GameObject2Ds.push_back(emitter2);
 
-	ParticleEmitter2D* smokeEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 600.0f, 400.0f, 2.0f, 1.0f, 45.0f, 90.0f, 80.0f, 20.0f, 0.09f, 0.01f, Color(0.8f, 0.8f, 0.8f, 0.5f), 75);
+	ParticleEmitter2D* smokeEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 600.0f, 400.0f, 2.0f, 1.0f, 45.0f, 90.0f, 80.0f, 20.0f, 0.09f, 0.01f, Color(0.3f, 0.3f, 0.3f, 0.5f), 75);
 	m_GameObject2Ds.push_back(smokeEmitter);
 
 	ParticleEmitter2D* emitter3 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 300.0f, 3.0f, 1.5f, 270.0f, 10.0f, 80.0f, 20.0f, 0.09f, 0.01f, Color(0.1f, 0.2f,0.8f, 1.0f), 75);
