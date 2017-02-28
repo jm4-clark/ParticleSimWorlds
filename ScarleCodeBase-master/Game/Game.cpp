@@ -109,31 +109,17 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	m_DD->m_light = m_light;
 
 	srand(time(0));
-
-	/*vector<Particle*> particles;
-	for (int i = 0; i < 100; i++)
-	{
-		float randLife = rand() % 2 + 1;
-		float randAngle = rand() % 360;
-		float randSpeed = (rand() % 5000 + 1000);
-		randSpeed = randSpeed / 100;
-		float randScale = (rand() % 10 + 8);
-		randScale = randScale / 100;
-		particles.push_back(new Particle("PlayerTest", _pd3dDevice,
-			400.0f, 400.0f, randLife, randAngle, randSpeed, Vector2(randScale, randScale)));
-		m_GameObject2Ds.push_back(particles[i]);
-	}*/
 	
-	ParticleEmitter2D* emitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 200.0f, 200.0f, 0.5f, 0.1f, 180.0f, 180.0f, 700.0f, 100.0f, 0.09f, 0.01f, 50);
+	ParticleEmitter2D* emitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 0.5f, 0.1f, 180.0f, 180.0f, 700.0f, 100.0f, 0.03f, 0.01f, Color(255, 0, 0), 50);
 	m_GameObject2Ds.push_back(emitter);
 
-	ParticleEmitter2D* emitter2 = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 200.0f, 200.0f, 0.75f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, 50);
+	ParticleEmitter2D* emitter2 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 0.75f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, Color(255, 255, 0), 50);
 	m_GameObject2Ds.push_back(emitter2);
 
-	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 600.0f, 400.0f, 2.0f, 1.0f, 45.0f, 90.0f, 80.0f, 20.0f, 0.09f, 0.01f, 75);
-	m_GameObject2Ds.push_back(fireEmitter);
+	ParticleEmitter2D* smokeEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 600.0f, 400.0f, 2.0f, 1.0f, 45.0f, 90.0f, 80.0f, 20.0f, 0.09f, 0.01f, Color(0.8f, 0.8f, 0.8f, 0.5f), 75);
+	m_GameObject2Ds.push_back(smokeEmitter);
 
-	ParticleEmitter2D* emitter3 = new ParticleEmitter2D(_pd3dDevice, "PlayerTest", 400.0f, 300.0f, 3.0f, 1.5f, 270.0f, 10.0f, 80.0f, 20.0f, 0.09f, 0.01f, 75);
+	ParticleEmitter2D* emitter3 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 300.0f, 3.0f, 1.5f, 270.0f, 10.0f, 80.0f, 20.0f, 0.09f, 0.01f, Color(0.1f, 0.2f,0.8f, 1.0f), 75);
 	m_GameObject2Ds.push_back(emitter3);
 };
 
@@ -239,7 +225,7 @@ bool Game::Tick()
 void Game::PlayTick()
 {
 	//upon space bar switch camera state
-	if ((m_keyboardState[DIK_SPACE] & 0x80) && !(m_prevKeyboardState[DIK_SPACE] & 0x80))
+	/*if ((m_keyboardState[DIK_SPACE] & 0x80) && !(m_prevKeyboardState[DIK_SPACE] & 0x80))
 	{
 		if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
 		{
@@ -249,7 +235,7 @@ void Game::PlayTick()
 		{
 			m_GD->m_GS = GS_PLAY_MAIN_CAM;
 		}
-	}
+	}*/
 
 	//update all objects
 	for (list<GameObject *>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)

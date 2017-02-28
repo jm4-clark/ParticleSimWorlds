@@ -129,7 +129,6 @@
     <ClInclude Include="DrawData.h" />
     <ClInclude Include="Emitter3D.h" />
     <ClInclude Include="Enemy.h" />
-    <ClInclude Include="fileVBGO.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
     <ClInclude Include="gameobject.h" />
@@ -138,7 +137,6 @@
     <ClInclude Include="Helper.h" />
     <ClInclude Include="ImageGO2D.h" />
     <ClInclude Include="Light.h" />
-    <ClInclude Include="MarchCubes.h" />
     <ClInclude Include="ObjectList.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Particle3D.h" />
@@ -151,12 +149,7 @@
     <ClInclude Include="TPSCamera.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="TreeBit.h" />
-    <ClInclude Include="VBCube.h" />
     <ClInclude Include="VBGO.h" />
-    <ClInclude Include="VBPillow.h" />
-    <ClInclude Include="VBSnail.h" />
-    <ClInclude Include="VBSpiked.h" />
-    <ClInclude Include="VBspiral.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -165,13 +158,11 @@
     <ClCompile Include="CMOGO.cpp" />
     <ClCompile Include="Emitter3D.cpp" />
     <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="fileVBGO.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="gameobject.cpp" />
     <ClCompile Include="GameObject2D.cpp" />
     <ClCompile Include="ImageGO2D.cpp" />
     <ClCompile Include="light.cpp" />
-    <ClCompile Include="MarchCubes.cpp" />
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Particle3D.cpp" />
     <ClCompile Include="ParticleEmitter2D.cpp" />
@@ -183,9 +174,7 @@
     <ClCompile Include="TPSCamera.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="treebit.cpp" />
-    <ClCompile Include="VBCube.cpp" />
     <ClCompile Include="VBGO.cpp" />
-    <ClCompile Include="VBSnail.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

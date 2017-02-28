@@ -19,7 +19,7 @@ Particle::Particle(string _fileName, ID3D11Device * _GD)
 }
 
 
-void Particle::Spawn(float x, float y, float life, float angle, float speed, Vector2 size)
+void Particle::Spawn(float x, float y, float life, float angle, float speed, Vector2 size, Color colour)
 {
 	m_alive = true; //turn particle on
 	m_pos.x = x; //set pos
@@ -28,6 +28,8 @@ void Particle::Spawn(float x, float y, float life, float angle, float speed, Vec
 	angleInRadians = angle * XM_PI / 180;
 	m_vel = Vector2((speed * cos(angleInRadians)), (-speed * sin(angleInRadians)));
 	m_originalScale = m_scale = size;
+	m_colour = colour;
+	m_originalAlpha = m_alpha = m_colour.w;
 }
 
 
@@ -51,7 +53,9 @@ void Particle::Tick(GameData * _GD)
 		if (m_life > 0) //stuff to do when alive
 		{
 			float ageRatio = m_life / m_originalLife;
-			m_scale = m_originalScale * ageRatio;
+ 			m_alpha = m_originalAlpha * ageRatio;
+ 			m_colour = Color(m_colour.x, m_colour.y, m_colour.z, m_alpha);
+			
 
 			m_pos.x += m_vel.x * _GD->m_dt;
 			m_pos.y += m_vel.y * _GD->m_dt;
