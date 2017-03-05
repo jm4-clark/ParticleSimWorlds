@@ -21,18 +21,10 @@ protected:
 
 	float x;
 	float y;
-	float life;
-	float speed;
-	float angle;
-	float scale;
-	float minLife;
-	float maxLife;
-	float minSpeed;
-	float maxSpeed;
-	float minAngle;
-	float maxAngle;
-	float minScale;
-	float maxScale;
+	float life, minLife, maxLife;
+	float speed, minSpeed, maxSpeed;
+	float angle, minAngle, maxAngle;
+	float scale, minScale, maxScale;
 	Color colour;
 
 	bool onOff;

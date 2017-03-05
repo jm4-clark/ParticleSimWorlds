@@ -150,7 +150,10 @@
     <ClInclude Include="Particle3D.h">
       <Filter>Particles\3D\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="Emitter3D.h">
+    <ClInclude Include="ParticleEmitter3D.h">
+      <Filter>Particles\3D\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleBillboard.h">
       <Filter>Particles\3D\Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -215,10 +218,10 @@
     <ClCompile Include="ParticleEmitter2D.cpp">
       <Filter>Particles\2D\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Emitter3D.cpp">
+    <ClCompile Include="Particle3D.cpp">
       <Filter>Particles\3D\Source</Filter>
     </ClCompile>
-    <ClCompile Include="Particle3D.cpp">
+    <ClCompile Include="ParticleEmitter3D.cpp">
       <Filter>Particles\3D\Source</Filter>
     </ClCompile>
   </ItemGroup>

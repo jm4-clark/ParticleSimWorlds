@@ -127,7 +127,6 @@
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="DrawData2D.h" />
     <ClInclude Include="DrawData.h" />
-    <ClInclude Include="Emitter3D.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameData.h" />
@@ -140,7 +139,9 @@
     <ClInclude Include="ObjectList.h" />
     <ClInclude Include="Particle.h" />
     <ClInclude Include="Particle3D.h" />
+    <ClInclude Include="ParticleBillboard.h" />
     <ClInclude Include="ParticleEmitter2D.h" />
+    <ClInclude Include="ParticleEmitter3D.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Player2D.h" />
     <ClInclude Include="Terrain.h" />
@@ -156,7 +157,6 @@
     <ClCompile Include="Actor2D.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="CMOGO.cpp" />
-    <ClCompile Include="Emitter3D.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="gameobject.cpp" />
@@ -166,6 +166,7 @@
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Particle3D.cpp" />
     <ClCompile Include="ParticleEmitter2D.cpp" />
+    <ClCompile Include="ParticleEmitter3D.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Player2D.cpp" />
     <ClCompile Include="Terrain.cpp" />
