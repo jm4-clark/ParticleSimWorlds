@@ -1,9 +1,9 @@
 #pragma once
 #include "GameData.h"
-#include "gameobject.h"
+#include "CMOGO.h"
 #include <string>
 
-class Particle3D : public GameObject
+class Particle3D : public CMOGO
 {
 public:
 	Particle3D(std::string _fileName, ID3D11Device * _GD);

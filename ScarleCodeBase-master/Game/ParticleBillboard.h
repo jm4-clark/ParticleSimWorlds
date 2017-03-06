@@ -3,7 +3,7 @@
 
 struct VertexIn
 {
-	Vector3 position;
+	//Vector3 position;
 	float size;
 };
 

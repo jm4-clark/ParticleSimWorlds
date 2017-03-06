@@ -19,3 +19,17 @@ void Particle3D::Spawn(Vector3 _pos, float _life, float _angle, float _speed, Ve
 	m_alive = true;
 	m_pos = _pos;
 }
+
+void Particle3D::Tick(GameData * _GD)
+{
+
+}
+
+void Particle3D::Draw(DrawData * _DD)
+{
+	if (m_alive) //only draw particles if they are alive
+	{
+		CMOGO::Draw(_DD);
+	}
+
+}
