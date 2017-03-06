@@ -6,7 +6,7 @@
 class Particle3D : public CMOGO
 {
 public:
-	Particle3D(std::string _fileName, ID3D11Device * _GD);
+	Particle3D(std::string _fileName, ID3D11Device * _GD, IEffectFactory* _EF);
 	~Particle3D();
 
 	void Spawn(Vector3 _pos, float _life, float _angle, float _speed, Vector3 _scale);

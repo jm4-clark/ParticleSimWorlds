@@ -9,7 +9,7 @@ class ParticleEmitter3D : public GameObject
 {
 public:
 	ParticleEmitter3D(ID3D11Device* _pd3dDevice, std::string _fileName,
-		Vector3 _pos, float _life, float _lifeVar, float _angle, float _angleVar);
+		Vector3 _pos, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar);
 	~ParticleEmitter3D() = default;
 
 	std::list<Particle3D*> getParticles();

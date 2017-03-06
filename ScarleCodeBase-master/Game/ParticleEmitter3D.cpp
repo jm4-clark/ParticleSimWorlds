@@ -1,4 +1,5 @@
 #include "ParticleEmitter3D.h"
+#include "Particle3D.h"
 
 ParticleEmitter3D::ParticleEmitter3D(ID3D11Device * _pd3dDevice, std::string _fileName, Vector3 _pos, float _life, float _lifeVar, float _angle, float _angleVar)
 {
