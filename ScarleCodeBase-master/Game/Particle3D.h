@@ -17,10 +17,13 @@ public:
 	bool isAlive() { return m_alive; };
 
 protected:
+	
 	bool m_alive;
 	float m_life;
 	float m_originalLife;
 	float m_speed;
 	float angleInRadians;
 
+
+	//ImageGO2D* sprite = nullptr;
 };

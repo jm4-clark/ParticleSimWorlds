@@ -18,11 +18,14 @@ public:
 
 	virtual void Draw(DrawData* _DD) override;
 
+
 	//Getters
 	Matrix GetProj() { return m_projMat; }
 	Matrix GetView() { return m_viewMat; }
+	Vector3 GetPos() { return m_pos; }
 
 	//Setters
+	void SetView(Matrix _viewMat) { m_viewMat = _viewMat; }
 
 protected:
 

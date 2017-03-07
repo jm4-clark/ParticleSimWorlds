@@ -30,3 +30,5 @@
 #include "Particle.h"
 #include "ParticleEmitter2D.h"
 #include "Tile2D.h"
+#include "Particle3D.h"
+#include "ParticleEmitter3D.h"

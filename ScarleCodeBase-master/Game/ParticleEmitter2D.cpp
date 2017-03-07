@@ -7,7 +7,7 @@
 #include <time.h>
 
 ParticleEmitter2D::ParticleEmitter2D(ID3D11Device* _pd3dDevice, string _fileName, 
-	float _x, float _y, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar, float _size, float _sizeVar, Color _colour, int _particleNum)
+	float _x, float _y, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar, float _size, float _sizeVar, Color _colour, float _drag, bool _gravity, int _particleNum)
 {
 	//initialise all particles
 	for (int i = 0; i < _particleNum; i++)
@@ -30,7 +30,8 @@ ParticleEmitter2D::ParticleEmitter2D(ID3D11Device* _pd3dDevice, string _fileName
 	minAngle = angle - _angleVar;
 	maxAngle = angle + _angleVar;
 	colour = _colour;
-
+	drag = _drag;
+	gravity = _gravity;
 	onOff = false;
 }
 
@@ -53,7 +54,7 @@ void ParticleEmitter2D::Tick(GameData* _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour);
+				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, drag, gravity);
 				break;
 			}
 		}
@@ -65,7 +66,7 @@ void ParticleEmitter2D::Tick(GameData* _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour);
+				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, drag, gravity);
 				break;
 			}
 		}
@@ -82,7 +83,7 @@ void ParticleEmitter2D::Tick(GameData* _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour);
+				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, drag, gravity);
 				break;
 			}
 		}

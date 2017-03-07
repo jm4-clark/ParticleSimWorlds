@@ -1,15 +1,15 @@
 #pragma once
 #include "GameData.h"
-#include "gameobject.h"
+#include "CMOGO.h"
 #include <list>
 
 class Particle3D;
 
-class ParticleEmitter3D : public GameObject
+class ParticleEmitter3D : public CMOGO
 {
 public:
-	ParticleEmitter3D(ID3D11Device* _pd3dDevice, std::string _fileName,
-		Vector3 _pos, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar);
+	ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffectFactory* _EF,
+		Vector3 _pos, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar, float _size, float _sizeVar, int _particleNum);
 	~ParticleEmitter3D() = default;
 
 	std::list<Particle3D*> getParticles();
@@ -20,6 +20,11 @@ public:
 protected:
 	std::list<Particle3D*> m_particles;
 
-	float life;
-	float speed;
+	float x, y, z;
+	float life, minLife, maxLife;
+	float speed, minSpeed, maxSpeed;
+	float angle, minAngle, maxAngle;
+	float scale, minScale, maxScale;
+
+	bool onOff;
 };

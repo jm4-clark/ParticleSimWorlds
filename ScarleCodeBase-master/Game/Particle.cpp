@@ -19,17 +19,20 @@ Particle::Particle(string _fileName, ID3D11Device * _GD)
 }
 
 
-void Particle::Spawn(float x, float y, float life, float angle, float speed, Vector2 size, Color colour)
+void Particle::Spawn(float x, float y, float life, float angle, float speed, Vector2 size, Color colour, float drag, bool gravity)
 {
 	m_alive = true; //turn particle on
 	m_pos.x = x; //set pos
 	m_pos.y = y;
 	m_originalLife = m_life = life; //set life
 	angleInRadians = angle * XM_PI / 180;
-	m_vel = Vector2((speed * cos(angleInRadians)), (-speed * sin(angleInRadians)));
+	m_acc = Vector2((speed * cos(angleInRadians)), (-speed * sin(angleInRadians)));
 	m_originalScale = m_scale = size;
 	m_colour = colour;
 	m_originalAlpha = m_alpha = m_colour.w;
+
+	m_gravity = gravity;
+	m_drag = drag * size.x;
 }
 
 
@@ -46,6 +49,11 @@ bool Particle::isAlive()
 
 void Particle::Tick(GameData * _GD)
 {
+	if (m_gravity)
+	{
+		m_acc = Vector2(m_acc.x, m_acc.y - (_GD->gravity *m_drag));
+		//m_acc.y *= _GD->gravity;
+	}
 	if (m_alive)
 	{
 		m_life -= _GD->m_dt;
@@ -57,8 +65,8 @@ void Particle::Tick(GameData * _GD)
  			m_colour = Color(m_colour.x, m_colour.y, m_colour.z, m_alpha);
 			
 
-			m_pos.x += m_vel.x * _GD->m_dt;
-			m_pos.y += m_vel.y * _GD->m_dt;
+			m_pos.x += m_acc.x *_GD->m_dt;
+			m_pos.y += m_acc.y * _GD->m_dt;
 		}
 		else //die when out of life
 		{
