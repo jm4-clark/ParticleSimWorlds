@@ -6,8 +6,9 @@
 #include <DirectXColors.h>
 #include <time.h>
 
-ParticleEmitter2D::ParticleEmitter2D(ID3D11Device* _pd3dDevice, string _fileName, 
-	float _x, float _y, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar, float _size, float _sizeVar, Color _colour, float _drag, bool _gravity, int _particleNum)
+ParticleEmitter2D::ParticleEmitter2D(ID3D11Device* _pd3dDevice, string _fileName,
+	float _x, float _y, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar, float _size, float _sizeVar,
+	Color _colour, Color _endColour, float _drag, float _xGravity, float _yGravity, int _particleNum)
 {
 	//initialise all particles
 	for (int i = 0; i < _particleNum; i++)
@@ -30,8 +31,10 @@ ParticleEmitter2D::ParticleEmitter2D(ID3D11Device* _pd3dDevice, string _fileName
 	minAngle = angle - _angleVar;
 	maxAngle = angle + _angleVar;
 	colour = _colour;
+	endColour = _endColour;
 	drag = _drag;
-	gravity = _gravity;
+	xGravity = _xGravity;
+	yGravity = _yGravity;
 	onOff = false;
 }
 
@@ -54,7 +57,7 @@ void ParticleEmitter2D::Tick(GameData* _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, drag, gravity);
+				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, endColour, drag, xGravity, yGravity);
 				break;
 			}
 		}
@@ -66,7 +69,7 @@ void ParticleEmitter2D::Tick(GameData* _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, drag, gravity);
+				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, endColour, drag, xGravity, yGravity);
 				break;
 			}
 		}
@@ -77,21 +80,26 @@ void ParticleEmitter2D::Tick(GameData* _GD)
 		onOff = !onOff;
 	}
 
-	if (onOff == true)
+	if (onOff == true)//once toggled on, continually spawns particles
 	{
-		for (list<Particle *>::iterator it = m_particles.begin(); it != m_particles.end(); it++) //once toggled on, continually spawns particles
-		{
-			if (!(*it)->isAlive())
-			{
-				(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, drag, gravity);
-				break;
-			}
-		}
+		SpawnParticles(randLife, randAngle, randSpeed, randSize);
 	}
 
 	for (list<Particle *>::iterator it = m_particles.begin(); it != m_particles.end(); it++) //tick through all particles
 	{
 		(*it)->Tick(_GD);
+	}
+}
+
+void ParticleEmitter2D::SpawnParticles(float randLife, float randAngle, float randSpeed, float randSize)
+{
+	for (list<Particle *>::iterator it = m_particles.begin(); it != m_particles.end(); it++)
+	{
+		if (!(*it)->isAlive())
+		{
+			(*it)->Spawn(x, y, randLife, randAngle, randSpeed, Vector2(randSize, randSize), colour, endColour, drag, xGravity, yGravity);
+			break;
+		}
 	}
 }
 

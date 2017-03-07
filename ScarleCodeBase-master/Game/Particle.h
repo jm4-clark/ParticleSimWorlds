@@ -9,7 +9,7 @@ public:
 	Particle(string _fileName, ID3D11Device * _GD);
 	~Particle();
 
-	void Spawn(float x, float y, float life, float angle, float speed, Vector2 size, Color colour, float drag, bool gravity);
+	void Spawn(float x, float y, float life, float angle, float speed, Vector2 size, Color colour, Color endColour, float drag, float xGravity, float yGravity);
 
 	virtual void Tick(GameData* _GD);
 	virtual void Draw(DrawData2D* _DD);
@@ -26,6 +26,7 @@ protected:
 	ImageGO2D* sprite = nullptr;
 	float m_alpha;
 	float m_originalAlpha;
-	bool m_gravity;
+	bool m_xGravity, m_yGravity;
+	Color m_originalColour, m_endColour;
 
 };

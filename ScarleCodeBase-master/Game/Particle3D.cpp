@@ -10,7 +10,7 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 	m_life = 0.0f;
 	angleInRadians = 0.0f;
 	m_scale = Vector3(0.0f, 0.0f, 0.0f);
-	m_vel = Vector3(0.0f, 0.0f, 0.0f);
+	m_acc = Vector3(0.0f, 0.0f, 0.0f);
 
 	//sprite = new ImageGO2D(_fileName, _pd3dDevice);
 }
@@ -19,20 +19,23 @@ Particle3D::~Particle3D()
 {
 }
 
-void Particle3D::Spawn(Vector3 _pos, float _life, float _angle, float _speed, Vector3 _scale)
+void Particle3D::Spawn(Vector3 _pos, float _life, float _angle, float _speed, Vector3 _scale, float _drag, float _gravity)
 {
 	m_alive = true;
 	m_pos = _pos;
 	m_originalLife = m_life = _life;
-	angleInRadians = _angle * XM_PI /180;
-	m_vel = Vector3(_speed * cos(angleInRadians), -_speed * sin(angleInRadians), -_speed *cos(angleInRadians));
+	angleInRadians = _angle * XM_PI / 180;
+	m_acc = Vector3(_speed * cos(angleInRadians), -_speed * sin(angleInRadians), -_speed* cos(angleInRadians));//-_speed *cos(angleInRadians));
 	m_speed = _speed;
 	m_scale = _scale;
-	
+
+	m_gravity = _gravity;
+	m_drag = _drag * _scale.x;
 }
 
 void Particle3D::Tick(GameData * _GD)
 {
+	m_acc = Vector3(m_acc.x, m_acc.y - (_GD->gravity *m_drag * m_gravity), m_acc.z);
 	if (m_alive)
 	{
 		m_life -= _GD->m_dt;
@@ -41,9 +44,9 @@ void Particle3D::Tick(GameData * _GD)
 		{
 			float ageRatio = m_life / m_originalLife;
 
-			m_pos.x += m_vel.x * _GD->m_dt;
-			m_pos.y += m_vel.y * _GD->m_dt;
-			m_pos.z += m_vel.z * _GD->m_dt;
+			m_pos.x += m_acc.x * _GD->m_dt;
+			m_pos.y += m_acc.y * _GD->m_dt;
+			m_pos.z += m_acc.z * _GD->m_dt;
 		
 		}
 		else

@@ -179,6 +179,9 @@
   <ItemGroup>
     <ImageContentTask Include="redcircle.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ImageContentTask Include="trashman.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\ImageContentTask.targets" />

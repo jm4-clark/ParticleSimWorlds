@@ -11,6 +11,7 @@
 #include "GameData.h"
 #include "drawdata.h"
 #include "DrawData2D.h"
+#include <DirectXColors.h>
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -96,10 +97,13 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	//add Player
 	Player* pPlayer = new Player("BirdModelV1.cmo", _pd3dDevice, m_fxFactory);
 	m_GameObjects.push_back(pPlayer);
+
+	Terrain* table = new Terrain("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0, -200, 0), 0.0f, 0.0f, 0.0f, Vector3::One);
+	m_GameObjects.push_back(table);
 	
 	////add a secondary camera
-	//m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
-	//m_GameObjects.push_back(m_TPScam);
+	m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
+	m_GameObjects.push_back(m_TPScam);
 
 	//create DrawData struct and populate its pointers
 	m_DD = new DrawData;
@@ -110,20 +114,36 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	srand(time(0));
 	
-	ParticleEmitter2D* emitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 0.5f, 0.1f, 180.0f, 180.0f, 700.0f, 100.0f, 0.03f, 0.01f, Color(255, 0, 0), 1.0f, true, 50);
-	m_GameObject2Ds.push_back(emitter);
+	ParticleEmitter2D* explosionEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 1.0f, 0.1f, 180.0f, 180.0f, 700.0f, 100.0f, 0.03f, 0.01f, Color(1.0f, 1.0, 0.9, 0.8f), Color(1.0f, 0, 0, 0.0f), 1.0f, 0.0f, -1.0f, 50);
+	m_GameObject2Ds.push_back(explosionEmitter);
 
-	ParticleEmitter2D* emitter2 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 0.75f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, Color(255, 255, 0), 1.0f, true, 50);
-	m_GameObject2Ds.push_back(emitter2);
+	ParticleEmitter2D* explosionEmitter2 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 1.0f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, Color(1.0f, 1.0f, 1.0, 0.9f), Color(1.0f, 1.0f, 0.0f, 0.4f), 1.0f, 0.0f, -0.5f, 100);
+	m_GameObject2Ds.push_back(explosionEmitter2);
 
-	ParticleEmitter2D* smokeEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 1000.0f, 400.0f, 2.0f, 1.0f, 45.0f, 90.0f, 80.0f, 20.0f, 0.09f, 0.01f, Color(0.3f, 0.3f, 0.3f, 0.5f), 0.0f, false, 75);
+	ParticleEmitter2D* smokeEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 90.0f, 80.0f, 20.0f, 0.07f, 0.01f, Color(0.1f, 0.1f, 0.1f, 0.3f), Color(0.1f, 0.1f, 0.1f, 0.3f), 0.1f, 3.0f, -0.2f, 75);
 	m_GameObject2Ds.push_back(smokeEmitter);
 
-	ParticleEmitter2D* emitter3 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 300.0f, 5.0f, 1.5f, 80.0f, 5.0f, 120.0f, 20.0f, 0.09f, 0.01f, Color(0.1f, 0.2f,0.8f, 1.0f), 1.5f, true, 200);
-	m_GameObject2Ds.push_back(emitter3);
+	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 20.0f, 100.0f, 20.0f, 0.05f, 0.01f, Color(0.9f, 0.5f, 0.1f, 0.3f), Color(0.9f, 0.1f, 0.1f, 0.1f), 0.05f, 0.5f, -0.1f, 75);
+	m_GameObject2Ds.push_back(fireEmitter);
 
-	//ParticleEmitter3D* emitter = new ParticleEmitter3D("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 5.0f, 0.5f, 360.0f, 0.0f, 100.0f, 20.0f, 0.1f, 0.025f, 10);
-	//m_GameObjects.push_back(emitter);
+	ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 7.0f, 1.5f, 60.0f, 5.0f, 200.0f, 20.0f, 0.09f, 0.01f, Color(0.2f, 0.0f,0.8f, 0.9f), Color(0.8f, 0.2f, 0.2f, 0.2f), 1.5f, 1.5f, 1.0f, 200);
+	m_GameObject2Ds.push_back(waterEmitter);
+
+	//ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 5.0f, 1.5f, 80.0f, 5.0f, 120.0f, 20.0f, 0.09f, 0.01f, DirectX::Colors::Red, DirectX::Colors::Blue, 1.5f, true, 200);
+	//m_GameObject2Ds.push_back(waterEmitter);
+
+	//ParticleEmitter2D* muzzle = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 500.0f, 500.0f, 0.1f, 0.02f, 0.0f, 30.0f, 500.0f, 0.0f, 0.05f, 0.0f, Color(0.3f, 0.1f, 0, 0.9f), Color(0.3f, 0.1f, 0, 0.9f), 3.0f, false, 20);
+	//m_GameObject2Ds.push_back(muzzle);
+
+	
+
+	ParticleEmitter3D* emitter = new ParticleEmitter3D("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 
+		2.0f, 10.5f, 
+		360.0f, 360.0f, 
+		100.0f, 2.0f, 
+		0.1f, 0.025f, 
+		1.0f, -1.0f, 10);
+	m_GameObjects.push_back(emitter);
 };
 
 
@@ -228,7 +248,7 @@ bool Game::Tick()
 void Game::PlayTick()
 {
 	//upon space bar switch camera state
-	/*if ((m_keyboardState[DIK_SPACE] & 0x80) && !(m_prevKeyboardState[DIK_SPACE] & 0x80))
+	if ((m_keyboardState[DIK_SPACE] & 0x80) && !(m_prevKeyboardState[DIK_SPACE] & 0x80))
 	{
 		if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
 		{
@@ -238,7 +258,7 @@ void Game::PlayTick()
 		{
 			m_GD->m_GS = GS_PLAY_MAIN_CAM;
 		}
-	}*/
+	}
 
 	//update all objects
 	for (list<GameObject *>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
@@ -261,6 +281,10 @@ void Game::Draw(ID3D11DeviceContext* _pd3dImmediateContext)
 	if (m_GD->m_GS == GS_PLAY_TPS_CAM)
 	{
 		m_DD->m_cam = m_TPScam;
+	}
+	if (m_GD->m_GS == GS_PLAY_MAIN_CAM)
+	{
+		m_DD->m_cam = m_cam;
 	}
 
 	//update the constant buffer for the rendering of VBGOs
