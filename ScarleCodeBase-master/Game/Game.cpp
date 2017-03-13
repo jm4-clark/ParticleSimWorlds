@@ -13,6 +13,9 @@
 #include "DrawData2D.h"
 #include <DirectXColors.h>
 
+//anttweakbar
+
+
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -138,11 +141,11 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	
 
 	ParticleEmitter3D* emitter = new ParticleEmitter3D("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 
-		2.0f, 10.5f, 
-		360.0f, 360.0f, 
-		100.0f, 2.0f, 
+		2.0f, 0.5f, 
+		360.0f, 360.0f, 360.0f, 360.0f,
+		2000.0f, 0.0f, 
 		0.1f, 0.025f, 
-		1.0f, -1.0f, 10);
+		1.0f, 1.0f, 20);
 	m_GameObjects.push_back(emitter);
 };
 

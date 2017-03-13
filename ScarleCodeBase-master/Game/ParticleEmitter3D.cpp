@@ -3,7 +3,7 @@
 #include "Helper.h"
 
 ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffectFactory* _EF,
-	Vector3 _pos, float _life, float _lifeVar, float _angle, float _angleVar, float _speed, float _speedVar, float _size, float _sizeVar, float _drag, float _gravity, int _particleNum) : CMOGO(_fileName, _GD, _EF)
+	Vector3 _pos, float _life, float _lifeVar, float _angleXY, float _angleXYVar, float _angleZ, float _angleZVar, float _speed, float _speedVar, float _size, float _sizeVar, float _drag, float _gravity, int _particleNum) : CMOGO(_fileName, _GD, _EF)
 {
 	for (int i = 0; i < _particleNum; i++)
 	{
@@ -16,15 +16,18 @@ ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffe
 	life = _life;
 	speed = _speed;
 	scale = _size;
-	angle = _angle;
+	angleXY = _angleXY;
+	angleZ = _angleZ;
 	minSpeed = speed - _speedVar;
 	maxSpeed = speed + _speedVar;
 	minLife = life - _lifeVar;
 	maxLife = life + _lifeVar;
 	minScale = scale - _sizeVar;
 	maxScale = scale + _sizeVar;
-	minAngle = angle - _angleVar;
-	maxAngle = angle + _angleVar;
+	minAngleXY = angleXY - _angleXYVar;
+	maxAngleXY = angleXY + _angleXYVar;
+	minAngleZ = angleZ - _angleZVar;
+	maxAngleZ = angleZ + _angleZVar;
 	drag = _drag;
 	gravity = _gravity;
 }
@@ -45,7 +48,8 @@ void ParticleEmitter3D::Draw(DrawData * _DD)
 void ParticleEmitter3D::Tick(GameData * _GD)
 {
 	float randLife = minLife + (rand()) / (RAND_MAX / (maxLife - minLife));
-	float randAngle = minAngle + (rand()) / (RAND_MAX / (maxAngle - minAngle));;
+	float randAngleXY = minAngleXY + (rand()) / (RAND_MAX / (maxAngleXY - minAngleXY));
+	float randAngleZ = minAngleZ + (rand()) / (RAND_MAX / (maxAngleZ - minAngleZ));
 	float randSpeed = minSpeed + (rand()) / (RAND_MAX / (maxSpeed - minSpeed));
 	float randSize = minScale + (rand()) / (RAND_MAX / (maxScale - minScale));
 
@@ -55,7 +59,7 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(Vector3(x, y, z), randLife, randAngle, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity);
+				(*it)->Spawn(Vector3(x, y, z), randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity);
 				break;
 			}
 		}
@@ -67,7 +71,7 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(Vector3(x, y, z), randLife, randAngle, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity);
+				(*it)->Spawn(Vector3(x, y, z), randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity);
 				break;
 			}
 		}
@@ -84,7 +88,7 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(Vector3(x, y, z), randLife, randAngle, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity);
+				(*it)->Spawn(Vector3(x, y, z), randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity);
 				break;
 			}
 		}

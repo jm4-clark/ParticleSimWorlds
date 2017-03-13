@@ -9,7 +9,7 @@ public:
 	Particle3D(std::string _fileName, ID3D11Device * _GD, IEffectFactory* _EF);
 	~Particle3D();
 
-	void Spawn(Vector3 _pos, float _life, float _angle, float _speed, Vector3 _scale, float _drag, float _gravity);
+	void Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ, float _speed, Vector3 _scale, float _drag, float _gravity);
 
 	virtual void Tick(GameData* _GD);
 	virtual void Draw(DrawData* _DD);
@@ -22,7 +22,7 @@ protected:
 	float m_life;
 	float m_originalLife;
 	float m_speed;
-	float angleInRadians;
+	float angleXYInRadians;
 	float m_gravity;
 
 
