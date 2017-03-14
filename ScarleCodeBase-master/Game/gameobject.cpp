@@ -23,9 +23,9 @@ void GameObject::Tick(GameData* _GD)
 {
 	if (m_physicsOn)
 	{
-		Vector3 newVel = m_vel + _GD->m_dt * (m_acc - m_drag*m_vel);
+		Vector3 newVel = m_vel + _GD->m_dt * (m_acc - m_drag * m_vel);
 		Vector3 newPos = m_pos + _GD->m_dt * m_vel;
-
+		//newPos.y -= _GD->gravity * _GD->m_dt;
 		m_vel = newVel;
 		m_pos = newPos;
 	}

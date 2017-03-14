@@ -13,6 +13,7 @@
 #include "SpriteBatch.h"
 #include "SpriteFont.h"
 #include "Audio.h"
+#include <chrono>
 
 using std::list;
 using std::unique_ptr;
@@ -72,6 +73,12 @@ protected:
 
 	//Tick functions for each state
 	void PlayTick();
+
+	//Framerate variables
+	const float m_targetFPS = (1 / 60.0f) * 1000;
+	const float m_maxFPS = (1 / 100.0f) * 1000;
+	std::chrono::steady_clock::time_point m_updated;
+	double m_updateLag = 0;
 };
 
 

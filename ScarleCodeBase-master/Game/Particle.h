@@ -26,7 +26,7 @@ protected:
 	ImageGO2D* sprite = nullptr;
 	float m_alpha;
 	float m_originalAlpha;
-	bool m_xGravity, m_yGravity;
+	float m_xGravity, m_yGravity;
 	Color m_originalColour, m_endColour;
 
 };

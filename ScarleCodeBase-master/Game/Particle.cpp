@@ -53,7 +53,7 @@ bool Particle::isAlive()
 void Particle::Tick(GameData * _GD)
 {
 	
-	m_acc = Vector2(m_acc.x + (_GD->gravity * m_drag * m_xGravity), m_acc.y - (_GD->gravity * m_drag * m_yGravity));
+	m_acc = Vector2(m_acc.x + (9.81 * m_xGravity), m_acc.y +(9.81 * m_yGravity));
 	
 	if (m_alive)
 	{

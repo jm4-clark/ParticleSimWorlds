@@ -27,12 +27,19 @@ void Particle3D::Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ,
 	angleXYInRadians = _angleXY * XM_PI / 180;
 
 	m_acc = Vector3(_speed * cos(angleXYInRadians), -_speed * sin(angleXYInRadians), _speed * sin(_angleZ* XM_PI / 180));//-_speed *cos(angleInRadians));
-	//m_speed = _speed;
+	m_speed = _speed;
 	m_scale = _scale;
-
+	m_pitch = 0;
 	m_gravity = _gravity;
 	m_drag = _drag + _scale.x;
-	m_physicsOn = true;
+	if (m_gravity != 0)
+	{
+		m_physicsOn = true;
+	}
+	else
+	{
+		m_physicsOn = false;
+	}
 }
 
 void Particle3D::Tick(GameData * _GD)
@@ -47,9 +54,14 @@ void Particle3D::Tick(GameData * _GD)
 		{
 						
 			float ageRatio = m_life / m_originalLife;
-			//m_pos.x += m_acc.x * _GD->m_dt;
-			//m_pos.y += m_acc.y * _GD->m_dt;
-			//m_pos.z += m_acc.z * _GD->m_dt;
+			m_pitch += _GD->m_dt;
+			/*if (!m_physicsOn)
+			{
+				m_pos.x += m_acc.x *_GD->m_dt;
+				m_pos.y += m_acc.y *_GD->m_dt;
+				m_pos.z += m_acc.z *_GD->m_dt;
+			}*/
+			
 		
 		}
 		else
@@ -58,7 +70,7 @@ void Particle3D::Tick(GameData * _GD)
 		}
 
 	}
-	
+	_GD->gravity *= m_gravity;
 	CMOGO::Tick(_GD);
 }
 
@@ -69,6 +81,7 @@ void Particle3D::Draw(DrawData * _DD)
 		//Matrix m_view = Matrix::CreateBillboard(m_pos, _DD->m_cam->GetPos(),Vector3::Up, &Vector3::Forward);
 		//_DD->m_cam->SetView(m_view);
 		//_DD->m_pd3dImmediateContext->Draw(4, m_pos.x);
+
 		CMOGO::Draw(_DD);
 	}
 

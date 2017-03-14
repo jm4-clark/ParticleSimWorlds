@@ -123,13 +123,13 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	ParticleEmitter2D* explosionEmitter2 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 1.0f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, Color(1.0f, 1.0f, 1.0, 0.9f), Color(1.0f, 1.0f, 0.0f, 0.4f), 1.0f, 0.0f, -0.5f, 100);
 	m_GameObject2Ds.push_back(explosionEmitter2);
 
-	ParticleEmitter2D* smokeEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 90.0f, 80.0f, 20.0f, 0.07f, 0.01f, Color(0.1f, 0.1f, 0.1f, 0.3f), Color(0.1f, 0.1f, 0.1f, 0.3f), 0.1f, 3.0f, -0.2f, 75);
+	ParticleEmitter2D* smokeEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 90.0f, 80.0f, 20.0f, 0.07f, 0.01f, Color(0.1f, 0.1f, 0.1f, 0.3f), Color(0.1f, 0.1f, 0.1f, 0.3f), 0.1f, 0.0f, 0.0f, 75);
 	m_GameObject2Ds.push_back(smokeEmitter);
 
-	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 20.0f, 100.0f, 20.0f, 0.05f, 0.01f, Color(0.9f, 0.5f, 0.1f, 0.3f), Color(0.9f, 0.1f, 0.1f, 0.1f), 0.05f, 0.5f, -0.1f, 75);
+	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 20.0f, 100.0f, 20.0f, 0.05f, 0.01f, Color(0.9f, 0.5f, 0.1f, 0.3f), Color(0.9f, 0.1f, 0.1f, 0.1f), 0.05f, 0.0f, 0.1f, 75);
 	m_GameObject2Ds.push_back(fireEmitter);
 
-	ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 7.0f, 1.5f, 60.0f, 5.0f, 200.0f, 20.0f, 0.09f, 0.01f, Color(0.2f, 0.0f,0.8f, 0.9f), Color(0.8f, 0.2f, 0.2f, 0.2f), 1.5f, 1.5f, 1.0f, 200);
+	ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 6.0f, 1.5f, 90.0f, 5.0f, 100.0f, 20.0f, 0.09f, 0.01f, Color(0.2f, 0.0f,0.8f, 0.9f), Color(0.8f, 0.2f, 0.2f, 0.2f), 1.5f, -1.0f, -2.0f, 200);
 	m_GameObject2Ds.push_back(waterEmitter);
 
 	//ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 5.0f, 1.5f, 80.0f, 5.0f, 120.0f, 20.0f, 0.09f, 0.01f, DirectX::Colors::Red, DirectX::Colors::Blue, 1.5f, true, 200);
@@ -142,9 +142,9 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	ParticleEmitter3D* emitter = new ParticleEmitter3D("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 
 		2.0f, 0.5f, 
-		360.0f, 360.0f, 360.0f, 360.0f,
-		2000.0f, 0.0f, 
-		0.1f, 0.025f, 
+		270.0f, 5.0f, 180.0f, 180.0f,
+		2000.0f, 50.0f, 
+		0.1f, 0.02f, 
 		1.0f, 1.0f, 20);
 	m_GameObjects.push_back(emitter);
 };
@@ -210,41 +210,47 @@ bool Game::Tick()
 			return false;
 		}
 	}
+	//Set up variables used to control tick rate
+	auto now = std::chrono::steady_clock::now();
+	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_updated);
 
-	//Poll Keyboard & Mouse
-	ReadInput();
-
-	//Upon pressing escape QUIT
-	if (m_keyboardState[DIK_ESCAPE] & 0x80)
+	if (elapsed.count() >= m_targetFPS)
 	{
-		return false;
+		//Poll Keyboard & Mouse
+		ReadInput();
+
+		//Upon pressing escape QUIT
+		if (m_keyboardState[DIK_ESCAPE] & 0x80)
+		{
+			return false;
+		}
+
+		//lock the cursor to the centre of the window
+		RECT window;
+		GetWindowRect(m_hWnd, &window);
+		SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
+
+		//calculate frame time-step dt for passing down to game objects
+		DWORD currentTime = GetTickCount();
+		m_GD->m_dt = min((float)(currentTime - m_playTime) / 1000.0f, 0.1f);
+		m_playTime = currentTime;
+
+		//start to a VERY simple FSM
+		switch (m_GD->m_GS)
+		{
+		case GS_ATTRACT:
+			break;
+		case GS_PAUSE:
+			break;
+		case GS_GAME_OVER:
+			break;
+		case GS_PLAY_MAIN_CAM:
+		case GS_PLAY_TPS_CAM:
+			PlayTick();
+			break;
+		}
+		m_updated = now;
 	}
-
-	//lock the cursor to the centre of the window
-	RECT window;
-	GetWindowRect(m_hWnd, &window);
-	SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
-
-	//calculate frame time-step dt for passing down to game objects
-	DWORD currentTime = GetTickCount();
-	m_GD->m_dt = min((float)(currentTime - m_playTime) / 1000.0f, 0.1f);
-	m_playTime = currentTime;
-
-	//start to a VERY simple FSM
-	switch (m_GD->m_GS)
-	{
-	case GS_ATTRACT:
-		break;
-	case GS_PAUSE:
-		break;
-	case GS_GAME_OVER:
-		break;
-	case GS_PLAY_MAIN_CAM:
-	case GS_PLAY_TPS_CAM:
-		PlayTick();
-		break;
-	}
-	
 	return true;
 };
 
