@@ -72,8 +72,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>..\Bin\Desktop_2015\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>..\Bin\Desktop_2015\$(Platform)\$(Configuration)\</IntDir>
-    <ExecutablePath>$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);$(SolutionDir)..\Libs\AntTweakBar\include</ExecutablePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\Libs\AntTweakBar\lib</LibraryPath>
+    <ExecutablePath>$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)..\Libs\AntTweakBar\lib;</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir);..\Libs\AntTweakBar\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>..\Bin\Desktop_2015\$(Platform)\$(Configuration)\</OutDir>
@@ -84,7 +85,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\Inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\jm4clark\ParticleSimWorlds\ScarleCodeBase-master\Libs\AntTweakBar\include;..\Inc</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);_DEBUG;DEBUG</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>

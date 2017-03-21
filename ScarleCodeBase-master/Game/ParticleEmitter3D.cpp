@@ -1,11 +1,14 @@
 #include "ParticleEmitter3D.h"
 #include "Particle3D.h"
 #include "Helper.h"
+#include <AntTweakBar.h>
 
 ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffectFactory* _EF,
 	Vector3 _pos, float _life, float _lifeVar, float _angleXY, float _angleXYVar, float _angleZ, float _angleZVar, float _speed, float _speedVar, float _size, float _sizeVar, float _drag, float _gravity, int _particleNum) : CMOGO(_fileName, _GD, _EF)
 {
-	for (int i = 0; i < _particleNum; i++)
+	
+	particleNum = _particleNum;
+	for (int i = 0; i < particleNum; i++)
 	{
 		m_particles.push_back(new Particle3D(_fileName, _GD, _EF));
 	}
@@ -99,3 +102,9 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 		(*it)->Tick(_GD);
 	}
 }
+
+void ParticleEmitter3D::BuildEmitter()
+{
+
+}
+

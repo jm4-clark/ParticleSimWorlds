@@ -14,10 +14,11 @@
 #include <DirectXColors.h>
 
 //anttweakbar
-
+#include <AntTweakBar.h>
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
+
 
 Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance) 
 {
@@ -29,12 +30,14 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 #endif
 	m_audioEngine.reset(new AudioEngine(eflags));
 
+	
 	//Create DirectXTK spritebatch stuff
 	ID3D11DeviceContext* pd3dImmediateContext;
 	_pd3dDevice->GetImmediateContext(&pd3dImmediateContext);
 	m_DD2D = new DrawData2D();
 	m_DD2D->m_Sprites.reset(new SpriteBatch(pd3dImmediateContext));
 	m_DD2D->m_Font.reset(new SpriteFont(_pd3dDevice, L"..\\Assets\\italic.spritefont"));
+
 
 	//seed the random number generator
 	srand((UINT)time(NULL));
@@ -129,7 +132,7 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 20.0f, 100.0f, 20.0f, 0.05f, 0.01f, Color(0.9f, 0.5f, 0.1f, 0.3f), Color(0.9f, 0.1f, 0.1f, 0.1f), 0.05f, 0.0f, 0.1f, 75);
 	m_GameObject2Ds.push_back(fireEmitter);
 
-	ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 6.0f, 1.5f, 90.0f, 5.0f, 100.0f, 20.0f, 0.09f, 0.01f, Color(0.2f, 0.0f,0.8f, 0.9f), Color(0.8f, 0.2f, 0.2f, 0.2f), 1.5f, -1.0f, -2.0f, 200);
+	ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 6.0f, 1.5f, 45.0f, 5.0f, 400.0f, 20.0f, 0.09f, 0.01f, Color(0.2f, 0.0f,0.8f, 0.9f), Color(0.8f, 0.2f, 0.2f, 0.2f), 1.5f, 0.0f, 2.0f, 200);
 	m_GameObject2Ds.push_back(waterEmitter);
 
 	//ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 5.0f, 1.5f, 80.0f, 5.0f, 120.0f, 20.0f, 0.09f, 0.01f, DirectX::Colors::Red, DirectX::Colors::Blue, 1.5f, true, 200);
@@ -140,15 +143,69 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	
 
-	ParticleEmitter3D* emitter = new ParticleEmitter3D("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 
+	emitter = new ParticleEmitter3D("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 
 		2.0f, 0.5f, 
 		270.0f, 5.0f, 180.0f, 180.0f,
 		2000.0f, 50.0f, 
 		0.1f, 0.02f, 
 		1.0f, 1.0f, 20);
 	m_GameObjects.push_back(emitter);
+
+
+	//anttweakbar
+	float atbVar = 42.0f;
+	TwInit(TW_DIRECT3D11, _pd3dDevice);
+	TwWindowSize(m_GD->window_width, m_GD->window_height);
+
+
+
+	TwBar *bar;
+	bar = TwNewBar("Tweakerino");
+	TwDefine(" GLOBAL help='This is an Ant Tweak Bar?.' ");
+	int barSize[2] = { 224, 320 };
+	TwSetParam(bar, NULL, "size", TW_PARAM_INT32, 2, barSize);
+
+	//bar variables
+	TwAddVarCB(bar, "Particle Number", TW_TYPE_INT32, Game::SetCallBackPNum, (TwGetVarCallback)Game::GetCallBackPNum, &emitter, "min=0 max=42 group=Emitter keyincr=< keydecr=>");
+	TwAddVarRW(bar, "Colour", TW_TYPE_QUAT4F,  )
 };
 
+void TW_CALL Game::SetCallBackPNum(const void *value, void *clientData)
+{
+	static_cast<ParticleEmitter3D *>(clientData)->SetParticleNum(value);
+	static_cast<ParticleEmitter3D *>(clientData)->BuildEmitter();
+}
+
+void TW_CALL Game::GetCallBackPNum(void *value, void *clientData)
+{
+ 	*static_cast<float *>(value) = static_cast<ParticleEmitter3D *>(clientData)->GetParticleNum();
+}
+
+//void TW_CALL Game::SetCallBackPColor(const void *value, void *clientData)
+//{
+//	static_cast<ParticleEmitter3D *>(clientData)->SetParticleNum(value);
+//}
+//
+//void TW_CALL Game::GetCallBackPColor(void *value, void *clientData)
+//{
+//	*static_cast<float *>(value) = static_cast<ParticleEmitter3D *>(clientData)->GetParticleNum();
+//}
+
+
+
+LRESULT CALLBACK MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	//send event message to anttweakbar
+	if (TwEventWin(wnd, message, wParam, lParam))
+	{
+		return 0;
+	}
+	switch (message)
+	{
+	default: 
+		return DefWindowProc(wnd, message, wParam, lParam);
+	}
+}
 
 Game::~Game() 
 {
@@ -193,6 +250,8 @@ Game::~Game()
 	//clear away CMO render system
 	delete m_states;
 	delete m_fxFactory;
+
+	TwTerminate();
 
 	delete m_DD2D;
 
@@ -269,6 +328,7 @@ void Game::PlayTick()
 		}
 	}
 
+
 	//update all objects
 	for (list<GameObject *>::iterator it = m_GameObjects.begin(); it != m_GameObjects.end(); it++)
 	{
@@ -312,6 +372,9 @@ void Game::Draw(ID3D11DeviceContext* _pd3dImmediateContext)
 		(*it)->Draw(m_DD2D);
 	}
 	m_DD2D->m_Sprites->End();
+
+	//draw anttweakbar
+	TwDraw();
 
 	//drawing text screws up the Depth Stencil State, this puts it back again!
 	_pd3dImmediateContext->OMSetDepthStencilState(m_states->DepthDefault(), 0);

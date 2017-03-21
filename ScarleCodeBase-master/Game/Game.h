@@ -14,6 +14,7 @@
 #include "SpriteFont.h"
 #include "Audio.h"
 #include <chrono>
+#include <AntTweakBar.h>
 
 using std::list;
 using std::unique_ptr;
@@ -28,6 +29,7 @@ struct GameData;
 struct DrawData;
 struct DrawData2D;
 class Light;
+class ParticleEmitter3D;
 
 class Game
 {
@@ -40,12 +42,21 @@ public:
 
 	void Draw(ID3D11DeviceContext* _pd3dImmediateContext); //render the current game state
 
+
+	//anttweakbar callbacks
+	static  void TW_CALL SetCallBackPNum(const void *value, void *clientData);
+	static  void TW_CALL GetCallBackPNum(void *value, void *clientData);
+	static  void TW_CALL SetCallBackPColor(const void *value, void *clientData);
+	static  void TW_CALL GetCallBackPColor(void *value, void *clientData);
+
 protected:
 	DWORD m_playTime; //amount of time since the game started
 
 	Camera* m_cam; //principle camera
 	TPSCamera* m_TPScam;//TPS cam
 	Light* m_light; //base light
+
+	ParticleEmitter3D* emitter;
 
 	list<GameObject *> m_GameObjects; //data structure storing all GameObjects of this Game
 	list<GameObject2D *> m_GameObject2Ds;//ditto 2D objects
