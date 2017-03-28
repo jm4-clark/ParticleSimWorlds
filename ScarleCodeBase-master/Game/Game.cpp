@@ -148,12 +148,12 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	//m_GameObject2Ds.push_back(muzzle);
 		
 
-	emitter = new ParticleEmitter3D("..Assets/whitecircle.png", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), //"table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f),
+	emitter = new ParticleEmitter3D("..Assets/whitecircle.png", _pd3dDevice, m_fxFactory, m_TPScam, Vector3(0.0f, 0.0f, 0.0f),  //"table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f),
 		2.0f, 0.5f, 
 		0.0f, 20.0f, 0.0f, 180.0f,
 		2000.0f, 50.0f, 
 		1.2f, 0.2f, 
-		0.0f, 1.0f, 20);
+		0.0f, 2.0f, 20);
 	m_GameObjects.push_back(emitter);
 
 

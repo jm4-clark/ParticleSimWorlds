@@ -4,11 +4,12 @@
 #include "VBGO.h"
 #include "vertex.h"
 #include <string>
+#include "TPSCamera.h"
 
 class Particle3D : public VBGO
 {
 public:
-	Particle3D(std::string _fileName, ID3D11Device * _GD, IEffectFactory* _EF);
+	Particle3D(std::string _fileName, ID3D11Device * _GD, IEffectFactory* _EF, TPSCamera* _camPos);
 	~Particle3D();
 
 	void Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ, float _speed, Vector3 _scale, float _drag, float _gravity);
@@ -27,6 +28,11 @@ protected:
 	float angleXYInRadians;
 	float m_gravity;
 	Color colour;
+
+	TPSCamera* m_camPos;
+
+	int xPosVar;
+	float yPosVar = 0;
 
 	myVertex* m_vertices;
 	int m_size;

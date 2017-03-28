@@ -1,36 +1,27 @@
 #include "ParticleEmitter3D.h"
 #include "Particle3D.h"
 #include "Helper.h"
-#include <AntTweakBar.h>
+#include "camera.h"
 
-ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffectFactory* _EF,
+ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffectFactory* _EF, TPSCamera* _camPos,
 	Vector3 _pos, float _life, float _lifeVar, float _angleXY, float _angleXYVar, float _angleZ, float _angleZVar, float _speed, float _speedVar, float _size, float _sizeVar, float _drag, float _gravity, int _particleNum) //: VBGO(_fileName, _GD, _EF)
 {
 	
 	particleNum = _particleNum;
 	for (int i = 0; i < particleNum; i++)
 	{
-		m_particles.push_back(new Particle3D(_fileName, _GD, _EF));
+		m_particles.push_back(new Particle3D(_fileName, _GD, _EF, _camPos));
 	}
-	m_pos = _pos;
-	x = _pos.x;
-	y = _pos.y;
-	z = _pos.z;
+	m_pos = _pos; x = _pos.x; y = _pos.y; z = _pos.z;
 	life = _life;
 	speed = _speed;
 	scale = _size;
-	angleXY = _angleXY;
-	angleZ = _angleZ;
-	minSpeed = speed - _speedVar;
-	maxSpeed = speed + _speedVar;
-	minLife = life - _lifeVar;
-	maxLife = life + _lifeVar;
-	minScale = scale - _sizeVar;
-	maxScale = scale + _sizeVar;
-	minAngleXY = angleXY - _angleXYVar;
-	maxAngleXY = angleXY + _angleXYVar;
-	minAngleZ = angleZ - _angleZVar;
-	maxAngleZ = angleZ + _angleZVar;
+	angleXY = _angleXY;	angleZ = _angleZ;
+	minSpeed = speed - _speedVar; maxSpeed = speed + _speedVar;
+	minLife = life - _lifeVar; maxLife = life + _lifeVar;
+	minScale = scale - _sizeVar; maxScale = scale + _sizeVar;
+	minAngleXY = angleXY - _angleXYVar;	maxAngleXY = angleXY + _angleXYVar;
+	minAngleZ = angleZ - _angleZVar; maxAngleZ = angleZ + _angleZVar;
 	drag = _drag;
 	gravity = _gravity;
 

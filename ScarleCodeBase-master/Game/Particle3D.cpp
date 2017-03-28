@@ -3,9 +3,9 @@
 #include <dinput.h>
 #include "GameData.h"
 #include "DrawData.h"
-#include "camera.h"
+#include "TPSCamera.h"
 
-Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFactory* _EF)// : CMOGO(_fileName, _pd3dDevice, _EF)
+Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFactory* _EF, TPSCamera* _camPos)// : CMOGO(_fileName, _pd3dDevice, _EF)
 {
 	m_alive = false;
 	m_life = 0.0f;
@@ -14,6 +14,8 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 	m_acc = Vector3(0.0f, 0.0f, 0.0f);
 	colour = Color(0.8f, 0.2f, 0.4f, 1.0f);
 	
+	m_camPos = _camPos;
+
 	m_size = 3;
 
 	int numVerts = 6 * 6 * (m_size - 1) * (m_size-1); 
@@ -27,20 +29,6 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 		indices[i] = i;
 		m_vertices[i].texCoord = Vector2::One;
 	}
-
-	////build base transform
-	//Matrix stepTrans = Matrix::CreateTranslation(0.0f, 1.0f, 0.0f);
-	//Matrix rotTrans = Matrix::CreateRotationY(1.0f);
-	//Matrix scaleTrans = Matrix::CreateScale(m_scale);
-	//Matrix baseTrans = scaleTrans *  rotTrans * stepTrans;
-
-	////build array of transforms
-	//Matrix* transforms = new Matrix[2];
-	//transforms[0] = Matrix::Identity;
-	//for (int i = 1; i < 2; i++)
-	//{
-	//	transforms[i] = transforms[i - 1] * baseTrans;
-	//}
 
 
 	//build vertices using transforms
@@ -71,7 +59,7 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 			//m_vertices[vert++].Pos = Vector3((float)j, (float)(i + 1), -0.5f * (float)(m_size - 1));
 			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
 			//m_vertices[vert++].Pos = Vector3((float)(j + 1), (float)i, -0.5f * (float)(m_size - 1));
-
+			//
 			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
 			//m_vertices[vert++].Pos = Vector3((float)j, (float)(i + 1), -0.5f * (float)(m_size - 1));
 			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
@@ -80,7 +68,7 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 			//m_vertices[vert++].Pos = Vector3((float)(j + 1), (float)i, -0.5f * (float)(m_size - 1));
 		}
 	}
-	//Vector3 calcPos;
+
 	for (int i = 0; i < m_numPrims; i++)
 	{
 		WORD V1 = 3 * i;
@@ -139,7 +127,8 @@ void Particle3D::Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ,
 void Particle3D::Tick(GameData * _GD)
 {
 	//m_acc = Vector3(m_acc.x, m_acc.y - (_GD->gravity *m_drag * m_gravity), m_acc.z);
-
+	
+	Matrix m_rotMat = Matrix::CreateBillboard(m_pos, m_camPos->GetPos(), Vector3::Up, &Vector3::Backward);
 	if (m_alive)
 	{
 		m_life -= _GD->m_dt;
@@ -157,6 +146,7 @@ void Particle3D::Tick(GameData * _GD)
 				m_pos.z += m_acc.z *_GD->m_dt;
 			}*/
 			
+			m_pos.y += yPosVar;
 		
 		}
 		else
@@ -174,7 +164,7 @@ void Particle3D::Draw(DrawData * _DD)
 {
 	if (m_alive) //only draw particles if they are alive
 	{
-		Matrix m_view = Matrix::CreateBillboard(m_pos, _DD->m_cam->GetPos(),Vector3::Up, &Vector3::Backward);
+		
 		//_DD->m_cam->SetView(m_view);
 		_DD->m_pd3dImmediateContext->Draw(4, m_pos.x);
 		
