@@ -2,6 +2,7 @@
 #include "GameData.h"
 #include "CMOGO.h"
 #include "VBGO.h"
+#include "vertex.h"
 #include <string>
 
 class Particle3D : public VBGO
@@ -25,6 +26,10 @@ protected:
 	float m_speed;
 	float angleXYInRadians;
 	float m_gravity;
+	Color colour;
+
+	myVertex* m_vertices;
+	int m_size;
 
 
 	//ImageGO2D* sprite = nullptr;

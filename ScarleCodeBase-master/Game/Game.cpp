@@ -132,7 +132,13 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 20.0f, 100.0f, 20.0f, 0.05f, 0.01f, Color(0.9f, 0.5f, 0.1f, 0.3f), Color(0.9f, 0.1f, 0.1f, 0.1f), 0.05f, 0.0f, 0.01f, 75);
 	m_GameObject2Ds.push_back(fireEmitter);
 
-	ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 6.0f, 1.5f, 45.0f, 5.0f, 400.0f, 20.0f, 0.09f, 0.01f, Color(0.2f, 0.0f,0.8f, 0.9f), Color(0.8f, 0.2f, 0.2f, 0.2f), 1.5f, 0.0f, 2.0f, 200);
+	ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 
+		700.0f, 200.0f, 
+		6.0f, 1.5f, 45.0f, 5.0f, 
+		400.0f, 20.0f, 
+		0.09f, 0.01f, 
+		Color(0.2f, 0.0f,0.8f, 0.9f), Color(0.8f, 0.2f, 0.2f, 0.2f), 
+		1.5f, 0.0f, 0.0f, 200);
 	m_GameObject2Ds.push_back(waterEmitter);
 
 	//ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 5.0f, 1.5f, 80.0f, 5.0f, 120.0f, 20.0f, 0.09f, 0.01f, DirectX::Colors::Red, DirectX::Colors::Blue, 1.5f, true, 200);
@@ -144,10 +150,10 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	emitter = new ParticleEmitter3D("..Assets/whitecircle.png", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), //"table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f),
 		2.0f, 0.5f, 
-		270.0f, 5.0f, 180.0f, 180.0f,
+		0.0f, 20.0f, 0.0f, 180.0f,
 		2000.0f, 50.0f, 
-		0.1f, 0.02f, 
-		1.0f, 1.0f, 20);
+		1.2f, 0.2f, 
+		0.0f, 1.0f, 20);
 	m_GameObjects.push_back(emitter);
 
 
@@ -165,9 +171,9 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	TwSetParam(bar, NULL, "size", TW_PARAM_INT32, 2, barSize);
 
 	//bar variables
-	TwAddVarCB(bar, "Particle Number", TW_TYPE_INT32, Game::SetCallBackPNum, (TwGetVarCallback)Game::GetCallBackPNum, &emitter, "min=0 max=42 group=Emitter keyincr=< keydecr=>");
-	TwAddVarCB(bar, "Rotation", TW_TYPE_QUAT4F, Game::SetCallBackPRot, Game::GetCallBackPRot, &emitter, "opened=true axisz=-z group=Sponge");
-	TwAddVarCB(bar, "Particle Colour", TW_TYPE_COLOR4F, Game::SetCallBackPColor, Game::GetCallBackPColor, &emitter, "colormode = hls");
+	TwAddVarCB(bar, "Particle Number", TW_TYPE_INT32, SetCallBackPNum, GetCallBackPNum, &emitter, "min=0 max=42 group=Emitter keyincr=< keydecr=>");
+	TwAddVarCB(bar, "Rotation", TW_TYPE_QUAT4F, SetCallBackPRot, GetCallBackPRot, &emitter, "opened=true axisz=-z group=Sponge");
+	TwAddVarCB(bar, "Colour", TW_TYPE_COLOR4F, SetCallBackPColor, GetCallBackPColor, &emitter, "colormode = hls");
 
 	//TwAddVarRW(bar, "Colour", TW_TYPE_QUAT4F,  )
 };

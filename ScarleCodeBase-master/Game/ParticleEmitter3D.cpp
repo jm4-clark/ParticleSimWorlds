@@ -34,8 +34,8 @@ ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffe
 	drag = _drag;
 	gravity = _gravity;
 
-	quatRot = RotationFromAxisAngle({ -1, 1, 0 }, XM_PI / 4);
-	m_worldMat = Matrix::CreateFromQuaternion(quatRot);
+	quatRot = RotationFromAxisAngle({ -1, 1, 0 }, XM_PI / 2);
+	m_rotMat = Matrix::CreateFromQuaternion(quatRot);
 	colour = Color(1.0f, 0.0f, 0.0f, 1.0f);
 }
 

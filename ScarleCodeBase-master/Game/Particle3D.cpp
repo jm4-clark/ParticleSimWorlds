@@ -12,28 +12,99 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 	angleXYInRadians = 0.0f;
 	m_scale = Vector3(0.0f, 0.0f, 0.0f);
 	m_acc = Vector3(0.0f, 0.0f, 0.0f);
+	colour = Color(0.8f, 0.2f, 0.4f, 1.0f);
+	
+	m_size = 3;
 
-	int numVerts = 6; 
-	myVertex* vertices = new myVertex[numVerts];
+	int numVerts = 6 * 6 * (m_size - 1) * (m_size-1); 
+	m_numPrims = numVerts / 3;
+	myVertex* m_vertices = new myVertex[numVerts];
 	WORD* indices = new WORD[numVerts];
-
+	
+	//set text-coords somewhere safe
 	for (int i = 0; i < numVerts; i++)
 	{
 		indices[i] = i;
-		vertices[i].texCoord = Vector2::One;
+		m_vertices[i].texCoord = Vector2::One;
 	}
-	Matrix stepTrans = Matrix::CreateTranslation(0.0f, 1.0f, 0.0f);
-	Matrix rotTrans = Matrix::CreateRotationY(1.0f);
-	Matrix scaleTrans = Matrix::CreateScale(m_scale);
-	Matrix baseTrans = scaleTrans *  rotTrans * stepTrans;
 
-	Matrix* transforms = new Matrix[2];
-	transforms[0] = Matrix::Identity;
-	for (int i = 1; i < 2; i++)
+	////build base transform
+	//Matrix stepTrans = Matrix::CreateTranslation(0.0f, 1.0f, 0.0f);
+	//Matrix rotTrans = Matrix::CreateRotationY(1.0f);
+	//Matrix scaleTrans = Matrix::CreateScale(m_scale);
+	//Matrix baseTrans = scaleTrans *  rotTrans * stepTrans;
+
+	////build array of transforms
+	//Matrix* transforms = new Matrix[2];
+	//transforms[0] = Matrix::Identity;
+	//for (int i = 1; i < 2; i++)
+	//{
+	//	transforms[i] = transforms[i - 1] * baseTrans;
+	//}
+
+
+	//build vertices using transforms
+	int vert = 0;
+	for (int i = -(m_size - 1) / 2; i<(m_size - 1) / 2; i++)
 	{
-		transforms[i] = transforms[i - 1] * baseTrans;
+		for (int j = -(m_size - 1) / 2; j < (m_size - 1) / 2; j++)
+		{
+			//back
+			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3((float)i, (float)j, 0.5f * (float)(m_size - 1));
+			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3((float)(i + 1), (float)j, 0.5f * (float)(m_size - 1));
+			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3((float)i, (float)(j + 1), 0.5f * (float)(m_size - 1));
+
+			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3((float)(i + 1), (float)j, 0.5f * (float)(m_size - 1));
+			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3((float)(i + 1), (float)(j + 1), 0.5f * (float)(m_size - 1));
+			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
+			m_vertices[vert++].Pos = Vector3((float)i, (float)(j + 1), 0.5f * (float)(m_size - 1));
+			
+			////front
+			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+			//m_vertices[vert++].Pos = Vector3((float)j, (float)i, -0.5f * (float)(m_size - 1));
+			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+			//m_vertices[vert++].Pos = Vector3((float)j, (float)(i + 1), -0.5f * (float)(m_size - 1));
+			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+			//m_vertices[vert++].Pos = Vector3((float)(j + 1), (float)i, -0.5f * (float)(m_size - 1));
+
+			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+			//m_vertices[vert++].Pos = Vector3((float)j, (float)(i + 1), -0.5f * (float)(m_size - 1));
+			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+			//m_vertices[vert++].Pos = Vector3((float)(j + 1), (float)(i + 1), -0.5f * (float)(m_size - 1));
+			//m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+			//m_vertices[vert++].Pos = Vector3((float)(j + 1), (float)i, -0.5f * (float)(m_size - 1));
+		}
+	}
+	//Vector3 calcPos;
+	for (int i = 0; i < m_numPrims; i++)
+	{
+		WORD V1 = 3 * i;
+		WORD V2 = 3 * i + 1;
+		WORD V3 = 3 * i + 2;
+
+		Vector3 norm;
+		Vector3 vec1 = m_vertices[V1].Pos - m_vertices[V2].Pos;
+		Vector3 vec2 = m_vertices[V3].Pos - m_vertices[V2].Pos;
+		norm = vec1.Cross(vec2);
+		norm.Normalize();
+
+		m_vertices[V1].Norm = norm;
+		m_vertices[V2].Norm = norm;
+		m_vertices[V3].Norm = norm;
 	}
 
+
+	BuildIB(_pd3dDevice, indices);
+	BuildVB(_pd3dDevice, numVerts, m_vertices);
+
+	delete[] indices;
+	delete[] m_vertices;
+	m_vertices = nullptr;
 	//sprite = new ImageGO2D(_fileName, _pd3dDevice);
 }
 
@@ -54,6 +125,7 @@ void Particle3D::Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ,
 	m_pitch = 0;
 	m_gravity = _gravity;
 	m_drag = _drag + _scale.x;
+
 	if (m_gravity != 0)
 	{
 		m_physicsOn = true;
@@ -76,7 +148,8 @@ void Particle3D::Tick(GameData * _GD)
 		{
 						
 			float ageRatio = m_life / m_originalLife;
-			m_pitch += _GD->m_dt;
+			colour.w *= ageRatio;
+			//m_pitch += _GD->m_dt;
 			/*if (!m_physicsOn)
 			{
 				m_pos.x += m_acc.x *_GD->m_dt;
@@ -101,9 +174,9 @@ void Particle3D::Draw(DrawData * _DD)
 {
 	if (m_alive) //only draw particles if they are alive
 	{
-		//Matrix m_view = Matrix::CreateBillboard(m_pos, _DD->m_cam->GetPos(),Vector3::Up, &Vector3::Forward);
+		Matrix m_view = Matrix::CreateBillboard(m_pos, _DD->m_cam->GetPos(),Vector3::Up, &Vector3::Backward);
 		//_DD->m_cam->SetView(m_view);
-		//_DD->m_pd3dImmediateContext->Draw(4, m_pos.x);
+		_DD->m_pd3dImmediateContext->Draw(4, m_pos.x);
 		
 		VBGO::Draw(_DD);
 		//CMOGO::Draw(_DD);
