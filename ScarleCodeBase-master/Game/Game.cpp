@@ -123,13 +123,13 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	ParticleEmitter2D* explosionEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 1.0f, 0.1f, 180.0f, 180.0f, 700.0f, 100.0f, 0.03f, 0.01f, Color(1.0f, 1.0, 0.9, 0.8f), Color(1.0f, 0, 0, 0.0f), 1.0f, 0.0f, -1.0f, 50);
 	m_GameObject2Ds.push_back(explosionEmitter);
 
-	ParticleEmitter2D* explosionEmitter2 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 1.0f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, Color(1.0f, 1.0f, 1.0, 0.9f), Color(1.0f, 1.0f, 0.0f, 0.4f), 1.0f, 0.0f, -0.5f, 100);
+	ParticleEmitter2D* explosionEmitter2 = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 300.0f, 200.0f, 1.0f, 0.25f, 180.0f, 180.0f, 150.0f, 70.0f, 0.07f, 0.01f, Color(1.0f, 1.0f, 1.0, 0.9f), Color(1.0f, 1.0f, 0.0f, 0.4f), 1.0f, 0.0f, -0.0f, 100);
 	m_GameObject2Ds.push_back(explosionEmitter2);
 
 	ParticleEmitter2D* smokeEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 90.0f, 80.0f, 20.0f, 0.07f, 0.01f, Color(0.1f, 0.1f, 0.1f, 0.3f), Color(0.1f, 0.1f, 0.1f, 0.3f), 0.1f, 0.0f, 0.0f, 75);
 	m_GameObject2Ds.push_back(smokeEmitter);
 
-	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 20.0f, 100.0f, 20.0f, 0.05f, 0.01f, Color(0.9f, 0.5f, 0.1f, 0.3f), Color(0.9f, 0.1f, 0.1f, 0.1f), 0.05f, 0.0f, 0.1f, 75);
+	ParticleEmitter2D* fireEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 400.0f, 700.0f, 2.0f, 1.0f, 90.0f, 20.0f, 100.0f, 20.0f, 0.05f, 0.01f, Color(0.9f, 0.5f, 0.1f, 0.3f), Color(0.9f, 0.1f, 0.1f, 0.1f), 0.05f, 0.0f, 0.01f, 75);
 	m_GameObject2Ds.push_back(fireEmitter);
 
 	ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 6.0f, 1.5f, 45.0f, 5.0f, 400.0f, 20.0f, 0.09f, 0.01f, Color(0.2f, 0.0f,0.8f, 0.9f), Color(0.8f, 0.2f, 0.2f, 0.2f), 1.5f, 0.0f, 2.0f, 200);
@@ -137,13 +137,12 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	//ParticleEmitter2D* waterEmitter = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 700.0f, 200.0f, 5.0f, 1.5f, 80.0f, 5.0f, 120.0f, 20.0f, 0.09f, 0.01f, DirectX::Colors::Red, DirectX::Colors::Blue, 1.5f, true, 200);
 	//m_GameObject2Ds.push_back(waterEmitter);
-
+	//
 	//ParticleEmitter2D* muzzle = new ParticleEmitter2D(_pd3dDevice, "whitecircle", 500.0f, 500.0f, 0.1f, 0.02f, 0.0f, 30.0f, 500.0f, 0.0f, 0.05f, 0.0f, Color(0.3f, 0.1f, 0, 0.9f), Color(0.3f, 0.1f, 0, 0.9f), 3.0f, false, 20);
 	//m_GameObject2Ds.push_back(muzzle);
+		
 
-	
-
-	emitter = new ParticleEmitter3D("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), 
+	emitter = new ParticleEmitter3D("..Assets/whitecircle.png", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f), //"table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f),
 		2.0f, 0.5f, 
 		270.0f, 5.0f, 180.0f, 180.0f,
 		2000.0f, 50.0f, 
@@ -167,31 +166,44 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	//bar variables
 	TwAddVarCB(bar, "Particle Number", TW_TYPE_INT32, Game::SetCallBackPNum, (TwGetVarCallback)Game::GetCallBackPNum, &emitter, "min=0 max=42 group=Emitter keyincr=< keydecr=>");
-	TwAddVarRW(bar, "Colour", TW_TYPE_QUAT4F,  )
+	TwAddVarCB(bar, "Rotation", TW_TYPE_QUAT4F, Game::SetCallBackPRot, Game::GetCallBackPRot, &emitter, "opened=true axisz=-z group=Sponge");
+	TwAddVarCB(bar, "Particle Colour", TW_TYPE_COLOR4F, Game::SetCallBackPColor, Game::GetCallBackPColor, &emitter, "colormode = hls");
+
+	//TwAddVarRW(bar, "Colour", TW_TYPE_QUAT4F,  )
 };
 
 void TW_CALL Game::SetCallBackPNum(const void *value, void *clientData)
 {
+	//tw_particleNum = *static_cast<const int *>(value);
 	static_cast<ParticleEmitter3D *>(clientData)->SetParticleNum(value);
 	static_cast<ParticleEmitter3D *>(clientData)->BuildEmitter();
 }
 
 void TW_CALL Game::GetCallBackPNum(void *value, void *clientData)
 {
- 	*static_cast<float *>(value) = static_cast<ParticleEmitter3D *>(clientData)->GetParticleNum();
+	//*static_cast<int *>(value) = tw_particleNum;
+	*static_cast<float *>(value) = static_cast<ParticleEmitter3D *>(clientData)->GetParticleNum();
 }
 
-//void TW_CALL Game::SetCallBackPColor(const void *value, void *clientData)
-//{
-//	static_cast<ParticleEmitter3D *>(clientData)->SetParticleNum(value);
-//}
-//
-//void TW_CALL Game::GetCallBackPColor(void *value, void *clientData)
-//{
-//	*static_cast<float *>(value) = static_cast<ParticleEmitter3D *>(clientData)->GetParticleNum();
-//}
+void TW_CALL Game::SetCallBackPColor(const void *value, void *clientData)
+{
+	static_cast<ParticleEmitter3D *>(clientData)->SetParticleCol(value);
+}
 
+void TW_CALL Game::GetCallBackPColor(void *value, void *clientData)
+{
+	*static_cast<Color *>(value) = static_cast<ParticleEmitter3D *>(clientData)->GetParticleCol();
+}
 
+void TW_CALL Game::SetCallBackPRot(const void *value, void *clientData)
+{
+	static_cast<ParticleEmitter3D *>(clientData)->SetParticleCol(value);
+}
+
+void TW_CALL Game::GetCallBackPRot(void *value, void *clientData)
+{
+	*static_cast<Quaternion *>(value) = static_cast<ParticleEmitter3D *>(clientData)->GetParticleCol();
+}
 
 LRESULT CALLBACK MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

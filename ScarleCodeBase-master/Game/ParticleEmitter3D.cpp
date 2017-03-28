@@ -4,7 +4,7 @@
 #include <AntTweakBar.h>
 
 ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffectFactory* _EF,
-	Vector3 _pos, float _life, float _lifeVar, float _angleXY, float _angleXYVar, float _angleZ, float _angleZVar, float _speed, float _speedVar, float _size, float _sizeVar, float _drag, float _gravity, int _particleNum) : CMOGO(_fileName, _GD, _EF)
+	Vector3 _pos, float _life, float _lifeVar, float _angleXY, float _angleXYVar, float _angleZ, float _angleZVar, float _speed, float _speedVar, float _size, float _sizeVar, float _drag, float _gravity, int _particleNum) //: VBGO(_fileName, _GD, _EF)
 {
 	
 	particleNum = _particleNum;
@@ -33,6 +33,10 @@ ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffe
 	maxAngleZ = angleZ + _angleZVar;
 	drag = _drag;
 	gravity = _gravity;
+
+	quatRot = RotationFromAxisAngle({ -1, 1, 0 }, XM_PI / 4);
+	m_worldMat = Matrix::CreateFromQuaternion(quatRot);
+	colour = Color(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
 std::list<Particle3D*> ParticleEmitter3D::getParticles()
@@ -103,8 +107,26 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 	}
 }
 
+
+
 void ParticleEmitter3D::BuildEmitter()
 {
-
+	
 }
 
+Quaternion ParticleEmitter3D::RotationFromAxisAngle(const Vector3& axis, float angle)
+{
+	Quaternion out;
+	float norm = Length(axis);
+	float sina2 = sin(0.5f * angle);
+	out.w = sina2 * axis.x / norm;
+	out.x = sina2 * axis.y / norm;
+	out.y = sina2 * axis.z / norm;
+	out.z = cos(0.5f * angle);
+	return out;
+}
+
+float ParticleEmitter3D::Length(const Vector3& a)
+{
+	return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+}

@@ -1,16 +1,38 @@
 #include "Particle3D.h"
+#include "vertex.h"
 #include <dinput.h>
 #include "GameData.h"
 #include "DrawData.h"
 #include "camera.h"
 
-Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFactory* _EF) : CMOGO(_fileName, _pd3dDevice, _EF)
+Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFactory* _EF)// : CMOGO(_fileName, _pd3dDevice, _EF)
 {
 	m_alive = false;
 	m_life = 0.0f;
 	angleXYInRadians = 0.0f;
 	m_scale = Vector3(0.0f, 0.0f, 0.0f);
 	m_acc = Vector3(0.0f, 0.0f, 0.0f);
+
+	int numVerts = 6; 
+	myVertex* vertices = new myVertex[numVerts];
+	WORD* indices = new WORD[numVerts];
+
+	for (int i = 0; i < numVerts; i++)
+	{
+		indices[i] = i;
+		vertices[i].texCoord = Vector2::One;
+	}
+	Matrix stepTrans = Matrix::CreateTranslation(0.0f, 1.0f, 0.0f);
+	Matrix rotTrans = Matrix::CreateRotationY(1.0f);
+	Matrix scaleTrans = Matrix::CreateScale(m_scale);
+	Matrix baseTrans = scaleTrans *  rotTrans * stepTrans;
+
+	Matrix* transforms = new Matrix[2];
+	transforms[0] = Matrix::Identity;
+	for (int i = 1; i < 2; i++)
+	{
+		transforms[i] = transforms[i - 1] * baseTrans;
+	}
 
 	//sprite = new ImageGO2D(_fileName, _pd3dDevice);
 }
@@ -71,7 +93,8 @@ void Particle3D::Tick(GameData * _GD)
 
 	}
 	_GD->gravity *= m_gravity;
-	CMOGO::Tick(_GD);
+	VBGO::Tick(_GD);
+	//CMOGO::Tick(_GD);
 }
 
 void Particle3D::Draw(DrawData * _DD)
@@ -81,8 +104,9 @@ void Particle3D::Draw(DrawData * _DD)
 		//Matrix m_view = Matrix::CreateBillboard(m_pos, _DD->m_cam->GetPos(),Vector3::Up, &Vector3::Forward);
 		//_DD->m_cam->SetView(m_view);
 		//_DD->m_pd3dImmediateContext->Draw(4, m_pos.x);
-
-		CMOGO::Draw(_DD);
+		
+		VBGO::Draw(_DD);
+		//CMOGO::Draw(_DD);
 	}
 
 }

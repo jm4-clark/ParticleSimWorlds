@@ -48,7 +48,9 @@ public:
 	static  void TW_CALL GetCallBackPNum(void *value, void *clientData);
 	static  void TW_CALL SetCallBackPColor(const void *value, void *clientData);
 	static  void TW_CALL GetCallBackPColor(void *value, void *clientData);
-
+	static  void TW_CALL SetCallBackPRot(const void *value, void *clientData);
+	static  void TW_CALL GetCallBackPRot(void *value, void *clientData);
+	
 protected:
 	DWORD m_playTime; //amount of time since the game started
 
@@ -57,6 +59,7 @@ protected:
 	Light* m_light; //base light
 
 	ParticleEmitter3D* emitter;
+	int tw_particleNum = 0;
 
 	list<GameObject *> m_GameObjects; //data structure storing all GameObjects of this Game
 	list<GameObject2D *> m_GameObject2Ds;//ditto 2D objects
