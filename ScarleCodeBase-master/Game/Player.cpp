@@ -26,11 +26,34 @@ void Player::Tick(GameData* _GD)
 	case GS_PLAY_MAIN_CAM:
 	{
 		{
-			//MOUSE CONTROL SCHEME HERE
-			float speed = 10.0f;
-			m_acc.x += speed * _GD->m_mouseState->lX;
-			m_acc.z += speed * _GD->m_mouseState->lY;
-			break;
+			Vector3 forwardMove = 40.0f * Vector3::Forward;
+			Matrix rotMove = Matrix::CreateRotationY(m_yaw);
+			forwardMove = Vector3::Transform(forwardMove, rotMove);
+			float speed = 20.0f;
+			if (_GD->m_keyboardState[DIK_W] & 0x80)
+			{
+				//m_acc.y += speed;
+				m_acc += forwardMove;
+			}
+			if (_GD->m_keyboardState[DIK_S] & 0x80)
+			{
+				//m_acc.y -= speed;
+				m_acc -= forwardMove;
+			}
+			if (_GD->m_keyboardState[DIK_A] & 0x80)
+			{
+				m_acc.x -= speed;
+			}
+			if (_GD->m_keyboardState[DIK_D] & 0x80)
+			{
+				m_acc.x += speed;
+			}
+			
+			////MOUSE CONTROL SCHEME HERE
+			//float speed = 10.0f;
+			//m_acc.x += speed * _GD->m_mouseState->lX;
+			//m_acc.z += speed * _GD->m_mouseState->lY;
+			//break;
 		}
 	}
 	case GS_PLAY_TPS_CAM:
@@ -64,11 +87,11 @@ void Player::Tick(GameData* _GD)
 
 	//change orinetation of player
 	float rotSpeed = 2.0f * _GD->m_dt;
-	if (_GD->m_keyboardState[DIK_A] & 0x80)
+	if (_GD->m_keyboardState[DIK_Q] & 0x80)
 	{
 		m_yaw += rotSpeed;
 	}
-	if (_GD->m_keyboardState[DIK_D] & 0x80)
+	if (_GD->m_keyboardState[DIK_E] & 0x80)
 	{
 		m_yaw -= rotSpeed;
 	}

@@ -15,6 +15,7 @@
 
 //anttweakbar
 #include <AntTweakBar.h>
+#include <Application\Application.h>
 
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -32,7 +33,6 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 	
 	//Create DirectXTK spritebatch stuff
-	ID3D11DeviceContext* pd3dImmediateContext;
 	_pd3dDevice->GetImmediateContext(&pd3dImmediateContext);
 	m_DD2D = new DrawData2D();
 	m_DD2D->m_Sprites.reset(new SpriteBatch(pd3dImmediateContext));
@@ -149,20 +149,28 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 		
 
 	emitter = new ParticleEmitter3D("..Assets/whitecircle.png", _pd3dDevice, m_fxFactory, m_TPScam, Vector3(0.0f, 0.0f, 0.0f),  //"table.cmo", _pd3dDevice, m_fxFactory, Vector3(0.0f, 0.0f, 0.0f),
-		2.0f, 0.5f, 
-		0.0f, 20.0f, 0.0f, 180.0f,
-		2000.0f, 50.0f, 
+		1.0f, 0.5f, 
+		0.0f, 360.0f, 360.0f, -360.0f, 
+		200.0f, 5.0f, 
 		1.2f, 0.2f, 
-		0.0f, 2.0f, 20);
+		0.0f, -2.0f, 100);
 	m_GameObjects.push_back(emitter);
 
-
+	//pColour = Color(1.0f, 0.0f, 0.0f, 1.0f);
+	pNum = emitter->GetParticleNum();
+	// Initialize AntTweakBar
+	if (!TwInit(TW_DIRECT3D11, _pd3dDevice))
+	{
+		MessageBoxA(_hWnd, TwGetLastError(), "AntTweakBar initialization failed", MB_OK | MB_ICONERROR);
+		//Cleanup();
+		//return 0;
+	}
 	//anttweakbar
 	float atbVar = 42.0f;
-	TwInit(TW_DIRECT3D11, _pd3dDevice);
+	//TwInit(TW_DIRECT3D11, _pd3dDevice);
 	TwWindowSize(m_GD->window_width, m_GD->window_height);
 
-
+	
 
 	TwBar *bar;
 	bar = TwNewBar("Tweakerino");
@@ -171,9 +179,13 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	TwSetParam(bar, NULL, "size", TW_PARAM_INT32, 2, barSize);
 
 	//bar variables
-	TwAddVarCB(bar, "Particle Number", TW_TYPE_INT32, SetCallBackPNum, GetCallBackPNum, &emitter, "min=0 max=42 group=Emitter keyincr=< keydecr=>");
-	TwAddVarCB(bar, "Rotation", TW_TYPE_QUAT4F, SetCallBackPRot, GetCallBackPRot, &emitter, "opened=true axisz=-z group=Sponge");
-	TwAddVarCB(bar, "Colour", TW_TYPE_COLOR4F, SetCallBackPColor, GetCallBackPColor, &emitter, "colormode = hls");
+	TwAddVarRW(bar, "Particle Number", TW_TYPE_INT32, &pNum, "min=0 max=100 group=Emitter keyincr=< keydecr=>");
+	TwAddVarRW(bar, "Scale", TW_TYPE_FLOAT, &pScale, "min=0.1f max=10.0f group=Emitter");
+	//TwAddVarRW(bar, "Rotation", TW_TYPE_QUAT4F, &pRot, "opened=true axisz=-z group=Sponge");
+	//TwAddVarRW(bar, "Colour", TW_TYPE_COLOR4F, &pColour, "colormode = hls");
+	//TwAddVarCB(bar, "Particle Number", TW_TYPE_INT32, SetCallBackPNum, GetCallBackPNum, &emitter, "min=0 max=42 group=Emitter keyincr=< keydecr=>");
+	//TwAddVarCB(bar, "Rotation", TW_TYPE_QUAT4F, SetCallBackPRot, GetCallBackPRot, &emitter, "opened=true axisz=-z group=Sponge");
+	//TwAddVarCB(bar, "Colour", TW_TYPE_COLOR4F, SetCallBackPColor, GetCallBackPColor, &emitter, "colormode = hls");
 
 	//TwAddVarRW(bar, "Colour", TW_TYPE_QUAT4F,  )
 };
@@ -277,6 +289,10 @@ Game::~Game()
 
 bool Game::Tick() 
 {
+	emitter->SetParticleNum(&pNum);
+	emitter->SetPScale(pScale);
+	//emitter->SetPitchYawRoll(pRot->x, pRot->y, pRot->z);
+	//emitter->SetParticleCol(pColour);
 	//tick audio engine
 	if (!m_audioEngine->Update())
 	{
@@ -305,7 +321,7 @@ bool Game::Tick()
 		//lock the cursor to the centre of the window
 		RECT window;
 		GetWindowRect(m_hWnd, &window);
-		SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
+		//SetCursorPos((window.left + window.right) >> 1, (window.bottom + window.top) >> 1);
 
 		//calculate frame time-step dt for passing down to game objects
 		DWORD currentTime = GetTickCount();
@@ -328,6 +344,10 @@ bool Game::Tick()
 		}
 		m_updated = now;
 	}
+	
+	//pRot->x = emitter->GetRoll();
+	//pRot->y = emitter->GetPitch();
+	//pRot->z = emitter->GetYaw();
 	return true;
 };
 
@@ -441,3 +461,82 @@ bool Game::ReadInput()
 
 	return true;
 }
+
+/*LRESULT CALLBACK Game::MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam, ID3D11Device* _pd3dDevice)
+{
+	// Send event message to AntTweakBar
+	if (TwEventWin(wnd, message, wParam, lParam))
+		return 0; // Event has been handled by AntTweakBar
+
+	switch (message)
+	{
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		BeginPaint(wnd, &ps);
+		EndPaint(wnd, &ps);
+		return 0;
+	}
+	case WM_SIZE: // Window size has been changed
+		if (_pd3dDevice) // Resize D3D render target
+		{
+			// Release render target and depth-stencil view
+			ID3D11RenderTargetView *nullRTV = NULL;
+			pd3dImmediateContext->OMSetRenderTargets(1, &nullRTV, NULL);
+			if (m_pRenderTargetView)
+			{
+				g_RenderTargetView->Release();
+				g_RenderTargetView = NULL;
+			}
+			if (g_DepthStencilView)
+			{
+				g_DepthStencilView->Release();
+				g_DepthStencilView = NULL;
+			}
+
+			if (g_SwapChain)
+			{
+				// Resize swap chain
+				g_SwapChainDesc.BufferDesc.Width = LOWORD(lParam);
+				g_SwapChainDesc.BufferDesc.Height = HIWORD(lParam);
+				g_SwapChain->ResizeBuffers(g_SwapChainDesc.BufferCount, g_SwapChainDesc.BufferDesc.Width,
+					g_SwapChainDesc.BufferDesc.Height, g_SwapChainDesc.BufferDesc.Format,
+					g_SwapChainDesc.Flags);
+
+				// Re-create a render target and depth-stencil view
+				ID3D11Texture2D *backBuffer = NULL, *dsBuffer = NULL;
+				g_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+				_pd3dDevice->CreateRenderTargetView(backBuffer, NULL, &g_RenderTargetView);
+				backBuffer->Release();
+				g_DepthStencilDesc.Width = g_SwapChainDesc.BufferDesc.Width;
+				g_DepthStencilDesc.Height = g_SwapChainDesc.BufferDesc.Height;
+				_pd3dDevice->CreateTexture2D(&g_DepthStencilDesc, NULL, &dsBuffer);
+				_pd3dDevice->CreateDepthStencilView(dsBuffer, NULL, &g_DepthStencilView);
+				dsBuffer->Release();
+				g_D3DDevCtx->OMSetRenderTargets(1, &g_RenderTargetView, g_DepthStencilView);
+
+				// Setup the viewport
+				D3D11_VIEWPORT vp;
+				vp.Width = (float)g_SwapChainDesc.BufferDesc.Width;
+				vp.Height = (float)g_SwapChainDesc.BufferDesc.Height;
+				vp.MinDepth = 0.0f;
+				vp.MaxDepth = 1.0f;
+				vp.TopLeftX = 0;
+				vp.TopLeftY = 0;
+				g_D3DDevCtx->RSSetViewports(1, &vp);
+			}
+
+			// TwWindowSize has been called by TwEventWin, so it is not necessary to call it again here.
+		}
+		return 0;
+	case WM_CHAR:
+		if (wParam == VK_ESCAPE)
+			PostQuitMessage(0);
+		return 0;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	default:
+		return DefWindowProc(wnd, message, wParam, lParam);
+	}
+}*/

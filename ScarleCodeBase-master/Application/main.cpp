@@ -23,11 +23,15 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	}
 #endif
 
+	
+
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	Application App;
 	Game* myGame = nullptr;
+
+	
 
 	if (FAILED(App.InitWindow(hInstance, nCmdShow)))
 		return 0;
@@ -37,6 +41,13 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 		App.CleanupDevice();
 		return 0;
 	}
+
+	// Register our window class
+	//WNDCLASSEX wcex = { sizeof(WNDCLASSEX), CS_HREDRAW | CS_VREDRAW, App.MessageProc,
+	//	0L, 0L, hInstance, NULL, NULL, NULL, NULL, L"TwDX11", NULL };
+	//RegisterClassEx(&wcex);
+
+	
 
 	// Main message loop
 	MSG msg = { 0 };
@@ -74,7 +85,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
-
+	// Send event mssage to AntTweakBar
+	if (TwEventWin(hWnd, message, wParam, lParam))
+		return 0; // Event has been handled by AntTweakBar
 	switch (message)
 	{
 	case WM_PAINT:
@@ -95,3 +108,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
+

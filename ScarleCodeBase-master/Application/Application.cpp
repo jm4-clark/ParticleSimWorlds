@@ -80,7 +80,7 @@ HRESULT Application::InitWindow( HINSTANCE _hInstance, int _nCmdShow )
     ShowWindow( m_hWnd, _nCmdShow );
 
 	//Hide the mouse pointer
-	ShowCursor(false);
+	ShowCursor(true);
 	
     return S_OK;
 }
@@ -191,21 +191,21 @@ HRESULT Application::InitDevice()
     else
     {
         // DirectX 11.0 systems
-        DXGI_SWAP_CHAIN_DESC sd;
-        ZeroMemory(&sd, sizeof(sd));
-        sd.BufferCount = 1;
-        sd.BufferDesc.Width = width;
-        sd.BufferDesc.Height = height;
-        sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        sd.BufferDesc.RefreshRate.Numerator = 60;
-        sd.BufferDesc.RefreshRate.Denominator = 1;
-        sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        sd.OutputWindow = m_hWnd;
-        sd.SampleDesc.Count = 1;
-        sd.SampleDesc.Quality = 0;
-        sd.Windowed = TRUE;
+        //DXGI_SWAP_CHAIN_DESC sd;
+       // ZeroMemory(&sd, sizeof(sd));
+		m_pSwapChainDesc.BufferCount = 1;
+		m_pSwapChainDesc.BufferDesc.Width = width;
+		m_pSwapChainDesc.BufferDesc.Height = height;
+		m_pSwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		m_pSwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
+		m_pSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+		m_pSwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		m_pSwapChainDesc.OutputWindow = m_hWnd;
+		m_pSwapChainDesc.SampleDesc.Count = 1;
+		m_pSwapChainDesc.SampleDesc.Quality = 0;
+		m_pSwapChainDesc.Windowed = TRUE;
 
-        hr = dxgiFactory->CreateSwapChain( m_pd3dDevice, &sd, &m_pSwapChain );
+        hr = dxgiFactory->CreateSwapChain( m_pd3dDevice, &m_pSwapChainDesc, &m_pSwapChain );
     }
 
     // Note this tutorial doesn't handle full-screen swapchains so we block the ALT+ENTER shortcut
@@ -240,27 +240,27 @@ HRESULT Application::InitDevice()
     m_pImmediateContext->RSSetViewports( 1, &vp );
 
 	//Create depth stencil texture
-	D3D11_TEXTURE2D_DESC descDepth;
-	ZeroMemory(&descDepth, sizeof(descDepth));
-	descDepth.Width = width;
-	descDepth.Height = height;
-	descDepth.MipLevels = 1;
-	descDepth.ArraySize = 1;
-	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	descDepth.SampleDesc.Count = 1;
-	descDepth.SampleDesc.Quality = 0;
-	descDepth.Usage = D3D11_USAGE_DEFAULT;
-	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	descDepth.CPUAccessFlags = 0;
-	descDepth.MiscFlags = 0;
-	hr = m_pd3dDevice->CreateTexture2D(&descDepth, NULL, &m_pDepthStencil);
+	//D3D11_TEXTURE2D_DESC descDepth;
+	//ZeroMemory(&descDepth, sizeof(descDepth));
+	m_pDepthStencilDesc.Width = width;
+	m_pDepthStencilDesc.Height = height;
+	m_pDepthStencilDesc.MipLevels = 1;
+	m_pDepthStencilDesc.ArraySize = 1;
+	m_pDepthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	m_pDepthStencilDesc.SampleDesc.Count = 1;
+	m_pDepthStencilDesc.SampleDesc.Quality = 0;
+	m_pDepthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_pDepthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	m_pDepthStencilDesc.CPUAccessFlags = 0;
+	m_pDepthStencilDesc.MiscFlags = 0;
+	hr = m_pd3dDevice->CreateTexture2D(&m_pDepthStencilDesc, NULL, &m_pDepthStencil);
 	if (FAILED(hr))
 		return hr;
 
 	//Create the depth stencil view
 	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
 	ZeroMemory(&descDSV, sizeof(descDSV));
-	descDSV.Format = descDepth.Format;
+	descDSV.Format = m_pDepthStencilDesc.Format;
 	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	descDSV.Texture2D.MipSlice = 0;
 	hr = m_pd3dDevice->CreateDepthStencilView(m_pDepthStencil, &descDSV, &m_pDepthStencilView);
@@ -327,6 +327,87 @@ bool Application::Update()
 	}
 
 	return false;
+}
+
+
+
+LRESULT CALLBACK Application::MessageProc(HWND wnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	// Send event message to AntTweakBar
+	if (TwEventWin(wnd, message, wParam, lParam))
+		return 0; // Event has been handled by AntTweakBar
+
+	switch (message)
+	{
+	case WM_PAINT:
+	{
+		PAINTSTRUCT ps;
+		BeginPaint(wnd, &ps);
+		EndPaint(wnd, &ps);
+		return 0;
+	}
+	case WM_SIZE: // Window size has been changed
+		if (m_pd3dDevice) // Resize D3D render target
+		{
+			// Release render target and depth-stencil view
+			ID3D11RenderTargetView *nullRTV = NULL;
+			m_pImmediateContext->OMSetRenderTargets(1, &nullRTV, NULL);
+			if (m_pRenderTargetView)
+			{
+				m_pRenderTargetView->Release();
+				m_pRenderTargetView = NULL;
+			}
+			if (m_pDepthStencilView)
+			{
+				m_pDepthStencilView->Release();
+				m_pDepthStencilView = NULL;
+			}
+
+			if (m_pSwapChain)
+			{
+				// Resize swap chain
+				m_pSwapChainDesc.BufferDesc.Width = LOWORD(lParam);
+				m_pSwapChainDesc.BufferDesc.Height = HIWORD(lParam);
+				m_pSwapChain->ResizeBuffers(m_pSwapChainDesc.BufferCount, m_pSwapChainDesc.BufferDesc.Width,
+					m_pSwapChainDesc.BufferDesc.Height, m_pSwapChainDesc.BufferDesc.Format,
+					m_pSwapChainDesc.Flags);
+
+				// Re-create a render target and depth-stencil view
+				ID3D11Texture2D *backBuffer = NULL, *dsBuffer = NULL;
+				m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+				m_pd3dDevice->CreateRenderTargetView(backBuffer, NULL, &m_pRenderTargetView);
+				backBuffer->Release();
+				m_pDepthStencilDesc.Width = m_pSwapChainDesc.BufferDesc.Width;
+				m_pDepthStencilDesc.Height = m_pSwapChainDesc.BufferDesc.Height;
+				m_pd3dDevice->CreateTexture2D(&m_pDepthStencilDesc, NULL, &dsBuffer);
+				m_pd3dDevice->CreateDepthStencilView(dsBuffer, NULL, &m_pDepthStencilView);
+				dsBuffer->Release();
+				m_pImmediateContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+
+				// Setup the viewport
+				D3D11_VIEWPORT vp;
+				vp.Width = (float)m_pSwapChainDesc.BufferDesc.Width;
+				vp.Height = (float)m_pSwapChainDesc.BufferDesc.Height;
+				vp.MinDepth = 0.0f;
+				vp.MaxDepth = 1.0f;
+				vp.TopLeftX = 0;
+				vp.TopLeftY = 0;
+				m_pImmediateContext->RSSetViewports(1, &vp);
+			}
+
+			// TwWindowSize has been called by TwEventWin, so it is not necessary to call it again here.
+		}
+		return 0;
+	case WM_CHAR:
+		if (wParam == VK_ESCAPE)
+			PostQuitMessage(0);
+		return 0;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	default:
+		return DefWindowProc(wnd, message, wParam, lParam);
+	}
 }
 
 

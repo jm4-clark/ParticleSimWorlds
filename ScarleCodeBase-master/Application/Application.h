@@ -34,11 +34,7 @@ public:
 	bool Update();
 	void Render();
 
-protected:
-
-	//Window handles
-	HINSTANCE               m_hInst = nullptr;
-	HWND                    m_hWnd = nullptr;
+	LRESULT CALLBACK MessageProc(HWND, UINT, WPARAM, LPARAM);
 
 	//DirectX Resources
 	D3D_DRIVER_TYPE         m_driverType = D3D_DRIVER_TYPE_NULL;
@@ -48,11 +44,21 @@ protected:
 	ID3D11DeviceContext*    m_pImmediateContext = nullptr;
 	ID3D11DeviceContext1*   m_pImmediateContext1 = nullptr;
 	IDXGISwapChain*         m_pSwapChain = nullptr;
+	DXGI_SWAP_CHAIN_DESC    m_pSwapChainDesc;
 	IDXGISwapChain1*        m_pSwapChain1 = nullptr;
 	ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
 	ID3D11Texture2D*        m_pDepthStencil = nullptr;
 	ID3D11DepthStencilView* m_pDepthStencilView = nullptr;
+	D3D11_TEXTURE2D_DESC    m_pDepthStencilDesc;
 	ID3D11RasterizerState*  m_pRasterState = nullptr;
+
+protected:
+
+	//Window handles
+	HINSTANCE               m_hInst = nullptr;
+	HWND                    m_hWnd = nullptr;
+
+	
 
 	float m_ClearColour[4];
 

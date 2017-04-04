@@ -31,6 +31,7 @@ struct DrawData2D;
 class Light;
 class ParticleEmitter3D;
 
+
 class Game
 {
 public:
@@ -50,6 +51,16 @@ public:
 	static  void TW_CALL GetCallBackPColor(void *value, void *clientData);
 	static  void TW_CALL SetCallBackPRot(const void *value, void *clientData);
 	static  void TW_CALL GetCallBackPRot(void *value, void *clientData);
+
+	//LRESULT CALLBACK MessageProc(HWND, UINT, WPARAM, LPARAM, ID3D11Device*);
+	
+	ID3D11DeviceContext* pd3dImmediateContext;
+
+
+	int pNum = 20;
+	float pScale = 1.0f;
+	//Color pColour = Color(1.0f, 0.0f, 0.0f);
+	//Quaternion* pRot;
 	
 protected:
 	DWORD m_playTime; //amount of time since the game started

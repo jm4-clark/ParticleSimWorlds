@@ -23,6 +23,8 @@ public:
 	Matrix GetProj() { return m_projMat; }
 	Matrix GetView() { return m_viewMat; }
 	Vector3 GetPos() { return m_pos; }
+	Vector3 GetUp() { return m_up; }
+	Vector3 GetForward() { return m_target; }
 
 	//Setters
 	void SetView(Matrix _viewMat) { m_viewMat = _viewMat; }
