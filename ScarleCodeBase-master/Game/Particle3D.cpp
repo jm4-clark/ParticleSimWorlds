@@ -12,8 +12,10 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 	angleXYInRadians = 0.0f;
 	m_scale = Vector3(0.0f, 0.0f, 0.0f);
 	m_acc = Vector3(0.0f, 0.0f, 0.0f);
-	colour = Color(0.8f, 1.0f, 0.8f, 1.0f);
 	
+	Color colours[3] = { Color(10.0f, 0.0f, 0.0f), Color(0.0f, 4.0f, 0.0f), Color(6.0f, 0.0f, 10.0f) };
+	int randCol = rand() % 3;
+	colour = colours[randCol];
 	m_camPos = _camPos;
 
 	m_size = 3;

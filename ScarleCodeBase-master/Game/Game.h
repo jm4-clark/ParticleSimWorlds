@@ -70,6 +70,7 @@ public:
 	float pPos[3] = { 0.0f, 0.0f, 0.0f };
 	bool pFollow = false;
 	bool pResetPos = false;
+	float pLife = 2.0f;
 	//Color pColour = Color(1.0f, 0.0f, 0.0f);
 	//Quaternion* pRot;
 	

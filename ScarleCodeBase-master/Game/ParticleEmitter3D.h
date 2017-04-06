@@ -51,6 +51,8 @@ public:
 
 	void SetPSpeedVar(float _var) { speedVar = _var; }
 
+	void SetPLife(float _life) { life = _life; }
+
 	void BuildEmitter();
 
 	Quaternion RotationFromAxisAngle(const Vector3& axis, float angle);
@@ -59,7 +61,7 @@ public:
 protected:
 	std::list<Particle3D*> m_particles;
 	float x, y, z;
-	float life, minLife, maxLife;
+	float life, minLife, maxLife, lifeVar;
 	float speed, minSpeed, maxSpeed, speedVar;
 	float angleXY, minAngleXY, maxAngleXY;
 	float angleZ, minAngleZ, maxAngleZ;

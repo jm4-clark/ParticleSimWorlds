@@ -183,6 +183,7 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	TwAddVarRO(bar, "Current No.", TW_TYPE_INT32, &pCurNum, "group=Emitter");
 	TwAddVarRW(bar, "Speed", TW_TYPE_FLOAT, &pSpeed, "min=0 max=1000 group=Emitter");
 	TwAddVarRW(bar, "Speed Variation", TW_TYPE_FLOAT, &pSpeedVar, "min=0 max=100 group=Emitter");
+	TwAddVarRW(bar, "Lifetime", TW_TYPE_FLOAT, &pLife, "min=0.1 max=30 step=0.1 group=Emitter");
 	TwAddVarRW(bar, "X", TW_TYPE_FLOAT, &pPos[0], "min=-200 max=200 group=Location");
 	TwAddVarRW(bar, "Y", TW_TYPE_FLOAT, &pPos[1], "min=-200 max=200 group=Location");
 	TwAddVarRW(bar, "Z", TW_TYPE_FLOAT, &pPos[2], "min=-200 max=200 group=Location");
@@ -300,6 +301,7 @@ bool Game::Tick()
 	emitter->SetPSpeed(pSpeed);
 	emitter->SetPSpeedVar(pSpeedVar);
 	emitter->SetPCol(Color(pCol[0], pCol[1], pCol[2], pCol[3]));
+	emitter->SetPLife(pLife);
 	if (!pResetPos) 
 	{
 		if (pFollow)

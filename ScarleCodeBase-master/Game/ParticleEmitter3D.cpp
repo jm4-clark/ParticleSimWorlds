@@ -48,8 +48,8 @@ ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffe
 	scale = _size;
 	angleXY = _angleXY;	angleZ = _angleZ;
 	minSpeed = speed - _speedVar; maxSpeed = speed + _speedVar; speedVar = _speedVar;
-	minLife = life - _lifeVar; maxLife = life + _lifeVar; scaleVar = _sizeVar;
-	minScale = scale - _sizeVar; maxScale = scale + _sizeVar;
+	minLife = life - _lifeVar; maxLife = life + _lifeVar; lifeVar = _lifeVar;
+	minScale = scale - _sizeVar; maxScale = scale + _sizeVar; scaleVar = _sizeVar;
 	minAngleXY = angleXY - _angleXYVar;	maxAngleXY = angleXY + _angleXYVar;
 	minAngleZ = angleZ - _angleZVar; maxAngleZ = angleZ + _angleZVar;
 	drag = _drag;
@@ -77,6 +77,9 @@ void ParticleEmitter3D::Draw(DrawData * _DD)
 
 void ParticleEmitter3D::Tick(GameData * _GD)
 {
+	
+	minLife = life - lifeVar;
+	maxLife = life + lifeVar;
 	float randLife = minLife + (rand()) / (RAND_MAX / (maxLife - minLife));
 	float randAngleXY = minAngleXY + (rand()) / (RAND_MAX / (maxAngleXY - minAngleXY));
 	float randAngleZ = minAngleZ + (rand()) / (RAND_MAX / (maxAngleZ - minAngleZ));
