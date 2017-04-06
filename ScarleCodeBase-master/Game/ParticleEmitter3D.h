@@ -35,11 +35,21 @@ public:
 	void SetCurrentPNum(int _num) { currentParticleNum = _num; }
 	int GetCurrentPNum() { return currentParticleNum; }
 
-	void SetParticleCol(const void *col) { colour = *static_cast<const Color *>(col); }
+	void SetPCol(Color _col) { colour = _col; }
 	Color GetParticleCol() { return colour; }
 
 	void SetPScale(float _scale) { scale = _scale; }
 	float GetPScale() { return scale; }
+
+	void SetPDrag(float _drag) { drag = _drag; }
+	float GetPDrag() { return drag; }
+
+	void SetPGrav(float _grav) { gravity = _grav; }
+	float GetPGrav() { return gravity; }
+
+	void SetPSpeed(float _speed) { speed = _speed; }
+
+	void SetPSpeedVar(float _var) { speedVar = _var; }
 
 	void BuildEmitter();
 
@@ -50,7 +60,7 @@ protected:
 	std::list<Particle3D*> m_particles;
 	float x, y, z;
 	float life, minLife, maxLife;
-	float speed, minSpeed, maxSpeed;
+	float speed, minSpeed, maxSpeed, speedVar;
 	float angleXY, minAngleXY, maxAngleXY;
 	float angleZ, minAngleZ, maxAngleZ;
 	float scale, minScale, maxScale, scaleVar;

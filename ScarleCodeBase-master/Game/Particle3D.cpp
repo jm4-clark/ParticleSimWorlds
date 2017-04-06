@@ -12,7 +12,7 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 	angleXYInRadians = 0.0f;
 	m_scale = Vector3(0.0f, 0.0f, 0.0f);
 	m_acc = Vector3(0.0f, 0.0f, 0.0f);
-	colour = Color(0.8f, 0.2f, 0.4f, 1.0f);
+	colour = Color(0.8f, 1.0f, 0.8f, 1.0f);
 	
 	m_camPos = _camPos;
 
@@ -36,22 +36,7 @@ Particle3D::Particle3D(string _fileName, ID3D11Device * _pd3dDevice, IEffectFact
 	for (int i = -(m_size - 1) / 2; i<(m_size - 1) / 2; i++)
 	{
 		for (int j = -(m_size - 1) / 2; j < (m_size - 1) / 2; j++)
-		{
-			//back
-			/*m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3((float)i, (float)j, 0.5f * (float)(m_size - 1));
-			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3((float)(i + 1), (float)j, 0.5f * (float)(m_size - 1));
-			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3((float)i, (float)(j + 1), 0.5f * (float)(m_size - 1));
-
-			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3((float)(i + 1), (float)j, 0.5f * (float)(m_size - 1));
-			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3((float)(i + 1), (float)(j + 1), 0.5f * (float)(m_size - 1));
-			m_vertices[vert].Color = Color(0.0f, 1.0f, 0.0f, 1.0f);
-			m_vertices[vert++].Pos = Vector3((float)i, (float)(j + 1), 0.5f * (float)(m_size - 1));*/
-			
+		{			
 			////front
 			m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
 			m_vertices[vert++].Pos = Vector3((float)j, (float)i, -0.5f * (float)(m_size - 1));
@@ -100,7 +85,7 @@ Particle3D::~Particle3D()
 {
 }
 
-void Particle3D::Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ, float _speed, Vector3 _scale, float _drag, float _gravity, ParticleEmitter3D* _emitter)
+void Particle3D::Spawn(Vector3 _pos, Color _colour, float _life, float _angleXY, float _angleZ, float _speed, Vector3 _scale, float _drag, float _gravity, ParticleEmitter3D* _emitter)
 {
 	emitter = _emitter;
 	m_alive = true;
@@ -113,7 +98,8 @@ void Particle3D::Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ,
 	m_scale = _scale;
 	m_pitch = 0;
 	m_gravity = _gravity;
-	m_drag = _drag + _scale.x;
+	m_drag = _drag;// +_scale.x;
+	colour = _colour;
 
 	if (m_gravity != 0)
 	{
@@ -123,11 +109,25 @@ void Particle3D::Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ,
 	{
 		m_physicsOn = false;
 	}
+	//int vert = 0;
+	//for (int i = -(m_size - 1) / 2; i < (m_size - 1) / 2; i++)
+	//{
+	//	for (int j = -(m_size - 1) / 2; j < (m_size - 1) / 2; j++)
+	//	{
+	//		m_vertices[vert].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+	//		m_vertices[vert++].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+	//		m_vertices[vert++].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+
+	//		m_vertices[vert++].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+	//		m_vertices[vert++].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+	//		m_vertices[vert++].Color = colour;//Color(0.0f, 1.0f, 1.0f, 1.0f);
+	//	}
+	//}
 }
 
 void Particle3D::Tick(GameData * _GD)
 {
-	m_acc = Vector3(m_acc.x, m_acc.y - (_GD->gravity *m_drag * m_gravity), m_acc.z);
+	m_acc = Vector3(m_acc.x, m_acc.y - (m_drag * m_gravity), m_acc.z);
 	
 	Matrix m_billMat = Matrix::CreateBillboard(m_pos, m_camPos->GetPos(), m_camPos->GetUp(), &m_camPos->GetForward());
 	Matrix  scaleMat = Matrix::CreateScale(m_scale);
@@ -140,7 +140,8 @@ void Particle3D::Tick(GameData * _GD)
 						
 			float ageRatio = m_life / m_originalLife;
 			colour.w *= ageRatio;
-			m_roll += _GD->m_dt;
+		//	m_scale *= ageRatio;
+			//m_roll += _GD->m_dt;
 			//m_pitch += _GD->m_dt;
 			if (!m_physicsOn)
 			{
@@ -157,6 +158,7 @@ void Particle3D::Tick(GameData * _GD)
 				m_pos = newPos;
 			}
 			
+			
 			//m_pos.y += yPosVar;
 		
 		}
@@ -171,7 +173,7 @@ void Particle3D::Tick(GameData * _GD)
 	
 	m_worldMat = m_fudge * scaleMat * m_billMat;
 
-	m_acc - Vector3::Zero;
+	m_acc = Vector3::Zero;
 	//VBGO::Tick(_GD);
 	//CMOGO::Tick(_GD);
 }

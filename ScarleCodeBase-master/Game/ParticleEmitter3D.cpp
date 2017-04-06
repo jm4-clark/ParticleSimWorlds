@@ -9,7 +9,7 @@ ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffe
 	emitterType = EmitterType::POINTEMITTER;
 	particleNum  = maxPNum = _particleNum;
 	currentParticleNum = 0;
-	for (int i = 0; i < particleNum; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		m_particles.push_back(new Particle3D(_fileName, _GD, _EF, _camPos));
 	}
@@ -20,7 +20,7 @@ ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffe
 	angleXY = _angleXY;	angleZ = _angleZ;
 	minSpeed = speed - _speedVar; maxSpeed = speed + _speedVar;
 	minLife = life - _lifeVar; maxLife = life + _lifeVar;
-	minScale = scale - _sizeVar; maxScale = scale + _sizeVar;
+	minScale = scale - _sizeVar; maxScale = scale + _sizeVar; scaleVar = _sizeVar;
 	minAngleXY = angleXY - _angleXYVar;	maxAngleXY = angleXY + _angleXYVar;
 	minAngleZ = angleZ - _angleZVar; maxAngleZ = angleZ + _angleZVar;
 	drag = _drag;
@@ -47,7 +47,7 @@ ParticleEmitter3D::ParticleEmitter3D(string _fileName, ID3D11Device * _GD, IEffe
 	speed = _speed;
 	scale = _size;
 	angleXY = _angleXY;	angleZ = _angleZ;
-	minSpeed = speed - _speedVar; maxSpeed = speed + _speedVar;
+	minSpeed = speed - _speedVar; maxSpeed = speed + _speedVar; speedVar = _speedVar;
 	minLife = life - _lifeVar; maxLife = life + _lifeVar; scaleVar = _sizeVar;
 	minScale = scale - _sizeVar; maxScale = scale + _sizeVar;
 	minAngleXY = angleXY - _angleXYVar;	maxAngleXY = angleXY + _angleXYVar;
@@ -80,8 +80,12 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 	float randLife = minLife + (rand()) / (RAND_MAX / (maxLife - minLife));
 	float randAngleXY = minAngleXY + (rand()) / (RAND_MAX / (maxAngleXY - minAngleXY));
 	float randAngleZ = minAngleZ + (rand()) / (RAND_MAX / (maxAngleZ - minAngleZ));
+	maxSpeed = speed + speedVar;
+	minSpeed = speed - speedVar;
 	float randSpeed = minSpeed + (rand()) / (RAND_MAX / (maxSpeed - minSpeed));
-	float randSize = minScale + (rand()) / (RAND_MAX / ((scale + scaleVar) - (scale - scaleVar)));//(scale + (maxScale * 0.5)) - (scale + (minScale * 0.5))));
+	maxScale = scale + scaleVar;
+	minScale = scale - scaleVar;
+	float randSize = minScale + (rand()) / (RAND_MAX / (maxScale - minScale));//(scale + (maxScale * 0.5)) - (scale + (minScale * 0.5))));
 
 	if (((_GD->m_keyboardState[DIK_B] & 0x80) && !(_GD->m_prevKeyboardState[DIK_B] & 0x80)) && onOff == false) //spawn one particle
 	{
@@ -89,7 +93,7 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(m_pos, randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity, this);
+				(*it)->Spawn(m_pos,colour, randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity, this);
 				currentParticleNum += 1;
 				break;
 			}
@@ -102,7 +106,7 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 		{
 			if (!(*it)->isAlive())
 			{
-				(*it)->Spawn(Vector3(x, y, z), randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity, this);
+				(*it)->Spawn(Vector3(x, y, z),colour, randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity, this);
 				currentParticleNum += 1;
 				break;
 			}
@@ -120,7 +124,7 @@ void ParticleEmitter3D::Tick(GameData * _GD)
 		{
 			if ((!(*it)->isAlive()) && (currentParticleNum < maxPNum))
 			{
-				(*it)->Spawn(m_pos, randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity, this);
+				(*it)->Spawn(m_pos, colour, randLife, randAngleXY, randAngleZ, randSpeed, Vector3(randSize, randSize, randSize), drag, gravity, this);
 				currentParticleNum += 1;
 				break;
 			}

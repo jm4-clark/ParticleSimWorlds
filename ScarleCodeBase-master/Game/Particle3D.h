@@ -13,7 +13,7 @@ public:
 	Particle3D(std::string _fileName, ID3D11Device * _GD, IEffectFactory* _EF, Camera* _camPos);
 	~Particle3D();
 
-	void Spawn(Vector3 _pos, float _life, float _angleXY, float _angleZ, float _speed, Vector3 _scale, float _drag, float _gravity, ParticleEmitter3D* _emitter);
+	void Spawn(Vector3 _pos, Color _colour, float _life, float _angleXY, float _angleZ, float _speed, Vector3 _scale, float _drag, float _gravity, ParticleEmitter3D* _emitter);
 
 	virtual void Tick(GameData* _GD);
 	virtual void Draw(DrawData* _DD);

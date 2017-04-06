@@ -101,14 +101,14 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 
 
 	//add Player
-	Player* pPlayer = new Player("BirdModelV1.cmo", _pd3dDevice, m_fxFactory);
+	pPlayer = new Player("BirdModelV1.cmo", _pd3dDevice, m_fxFactory);
 	m_GameObjects.push_back(pPlayer);
 
 	Terrain* table = new Terrain("table.cmo", _pd3dDevice, m_fxFactory, Vector3(0, -200, 0), 0.0f, 0.0f, 0.0f, Vector3::One);
 	m_GameObjects.push_back(table);
 	
 	////add a secondary camera
-	m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 10.0f, 50.0f));
+	m_TPScam = new TPSCamera(0.25f * XM_PI, AR, 1.0f, 10000.0f, pPlayer, Vector3::UnitY, Vector3(0.0f, 30.0f, 100.0f));
 	m_GameObjects.push_back(m_TPScam);
 
 	//create DrawData struct and populate its pointers
@@ -179,15 +179,19 @@ Game::Game(ID3D11Device* _pd3dDevice, HWND _hWnd, HINSTANCE _hInstance)
 	TwSetParam(bar, NULL, "size", TW_PARAM_INT32, 2, barSize);
 
 	//bar variables
-	TwAddVarRW(bar, "Particle Number", TW_TYPE_INT32, &pNum, "min=0 max=100 group=Emitter keyincr=< keydecr=>");
-	TwAddVarRW(bar, "Scale", TW_TYPE_FLOAT, &pScale, "min=0.1f max=10.0f group=Emitter");
-	//TwAddVarRW(bar, "Rotation", TW_TYPE_QUAT4F, &pRot, "opened=true axisz=-z group=Sponge");
-	//TwAddVarRW(bar, "Colour", TW_TYPE_COLOR4F, &pColour, "colormode = hls");
-	//TwAddVarCB(bar, "Particle Number", TW_TYPE_INT32, SetCallBackPNum, GetCallBackPNum, &emitter, "min=0 max=42 group=Emitter keyincr=< keydecr=>");
-	//TwAddVarCB(bar, "Rotation", TW_TYPE_QUAT4F, SetCallBackPRot, GetCallBackPRot, &emitter, "opened=true axisz=-z group=Sponge");
-	//TwAddVarCB(bar, "Colour", TW_TYPE_COLOR4F, SetCallBackPColor, GetCallBackPColor, &emitter, "colormode = hls");
-
-	//TwAddVarRW(bar, "Colour", TW_TYPE_QUAT4F,  )
+	TwAddVarRW(bar, "Max No.", TW_TYPE_INT32, &pNum, "min=0 max=200 group=Emitter keyincr=< keydecr=>");
+	TwAddVarRO(bar, "Current No.", TW_TYPE_INT32, &pCurNum, "group=Emitter");
+	TwAddVarRW(bar, "Speed", TW_TYPE_FLOAT, &pSpeed, "min=0 max=1000 group=Emitter");
+	TwAddVarRW(bar, "Speed Variation", TW_TYPE_FLOAT, &pSpeedVar, "min=0 max=100 group=Emitter");
+	TwAddVarRW(bar, "X", TW_TYPE_FLOAT, &pPos[0], "min=-200 max=200 group=Location");
+	TwAddVarRW(bar, "Y", TW_TYPE_FLOAT, &pPos[1], "min=-200 max=200 group=Location");
+	TwAddVarRW(bar, "Z", TW_TYPE_FLOAT, &pPos[2], "min=-200 max=200 group=Location");
+	TwAddVarRW(bar, "Follow Player", TW_TYPE_BOOLCPP, &pFollow, "group=Location"); 
+	TwAddVarRW(bar, "Reset Position", TW_TYPE_BOOLCPP, &pResetPos, "group=Location");
+	TwAddVarRW(bar, "Scale", TW_TYPE_FLOAT, &pScale, "min=0.1f max=10.0f step=0.1f group=Emitter");
+	TwAddVarRW(bar, "Gravity", TW_TYPE_FLOAT, &pGrav, "min=-10 max=10 step = 0.2f group=Emitter");
+	TwAddVarRW(bar, "Drag", TW_TYPE_FLOAT, &pDrag, "min=0 max = 5 step=0.2 group=Emitter");
+	//TwAddVarRW(bar, "Colour", TW_TYPE_COLOR4F, &pCol, "colormode = hls"); due to how the vertices are created, I'm not sure how to change their colour on after initialization
 };
 
 void TW_CALL Game::SetCallBackPNum(const void *value, void *clientData)
@@ -205,7 +209,7 @@ void TW_CALL Game::GetCallBackPNum(void *value, void *clientData)
 
 void TW_CALL Game::SetCallBackPColor(const void *value, void *clientData)
 {
-	static_cast<ParticleEmitter3D *>(clientData)->SetParticleCol(value);
+	//static_cast<ParticleEmitter3D *>(clientData)->SetParticleCol(value);
 }
 
 void TW_CALL Game::GetCallBackPColor(void *value, void *clientData)
@@ -215,7 +219,7 @@ void TW_CALL Game::GetCallBackPColor(void *value, void *clientData)
 
 void TW_CALL Game::SetCallBackPRot(const void *value, void *clientData)
 {
-	static_cast<ParticleEmitter3D *>(clientData)->SetParticleCol(value);
+	//static_cast<ParticleEmitter3D *>(clientData)->SetParticleCol(value);
 }
 
 void TW_CALL Game::GetCallBackPRot(void *value, void *clientData)
@@ -291,6 +295,28 @@ bool Game::Tick()
 {
 	emitter->SetParticleNum(&pNum);
 	emitter->SetPScale(pScale);
+	emitter->SetPDrag(pDrag);
+	emitter->SetPGrav(pGrav);
+	emitter->SetPSpeed(pSpeed);
+	emitter->SetPSpeedVar(pSpeedVar);
+	emitter->SetPCol(Color(pCol[0], pCol[1], pCol[2], pCol[3]));
+	if (!pResetPos) 
+	{
+		if (pFollow)
+		{
+			emitter->SetPos(pPlayer->GetPos());
+		}
+		else
+		{
+			emitter->SetPos(Vector3(pPos[0], pPos[1], pPos[2]));
+		}
+	}
+	else
+	{
+		pFollow = false;
+		emitter->SetPos(Vector3::Zero);
+		pResetPos = false;
+	}
 	//emitter->SetPitchYawRoll(pRot->x, pRot->y, pRot->z);
 	//emitter->SetParticleCol(pColour);
 	//tick audio engine
@@ -348,6 +374,7 @@ bool Game::Tick()
 	//pRot->x = emitter->GetRoll();
 	//pRot->y = emitter->GetPitch();
 	//pRot->z = emitter->GetYaw();
+	pCurNum = emitter->GetCurrentPNum();
 	return true;
 };
 
